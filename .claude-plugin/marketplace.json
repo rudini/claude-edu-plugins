@@ -1,0 +1,26 @@
+{
+  "name": "claude-edu-plugins",
+  "owner": { "name": "Roger Rudin" },
+  "metadata": {
+    "description": "Education tools for Claude Code (Moodle, Kahoot)",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "moodle-skill",
+      "source": "./plugins/moodle-skill",
+      "description": "Manage Moodle courses: CRUD activities, quiz management, AI essay grading",
+      "version": "1.0.0",
+      "category": "education",
+      "tags": ["moodle", "lms", "grading", "quiz"]
+    },
+    {
+      "name": "kahoot-skill",
+      "source": "./plugins/kahoot-skill",
+      "description": "Create and manage Kahoot quizzes from JSON definitions",
+      "version": "1.0.0",
+      "category": "education",
+      "tags": ["kahoot", "quiz", "gamification"]
+    }
+  ]
+}

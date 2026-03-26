@@ -1,0 +1,10 @@
+{
+  "name": "kahoot-skill",
+  "version": "1.0.0",
+  "description": "Create and manage Kahoot quizzes from JSON definitions",
+  "author": { "name": "Roger Rudin", "url": "https://github.com/rudini" },
+  "repository": "https://github.com/rudini/claude-edu-plugins",
+  "license": "MIT",
+  "skills": "./skills/",
+  "hooks": "./hooks.json"
+}

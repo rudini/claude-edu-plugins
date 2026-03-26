@@ -1,0 +1,10 @@
+{
+  "name": "moodle-skill",
+  "version": "1.0.0",
+  "description": "Manage Moodle courses via CLI — activities, sections, quizzes, AI grading",
+  "author": { "name": "Roger Rudin", "url": "https://github.com/rudini" },
+  "repository": "https://github.com/rudini/claude-edu-plugins",
+  "license": "MIT",
+  "skills": "./skills/",
+  "hooks": "./hooks.json"
+}

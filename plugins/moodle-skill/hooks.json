@@ -1,0 +1,8 @@
+{
+  "SessionStart": [{
+    "hooks": [{
+      "type": "command",
+      "command": "diff -q \"${CLAUDE_PLUGIN_ROOT}/package.json\" \"${CLAUDE_PLUGIN_DATA}/package.json\" >/dev/null 2>&1 || (cp \"${CLAUDE_PLUGIN_ROOT}/package.json\" \"${CLAUDE_PLUGIN_DATA}/\" && cd \"${CLAUDE_PLUGIN_DATA}\" && npm install --ignore-scripts) || rm -f \"${CLAUDE_PLUGIN_DATA}/package.json\""
+    }]
+  }]
+}

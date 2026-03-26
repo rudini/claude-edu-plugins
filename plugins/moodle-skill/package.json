@@ -1,0 +1,12 @@
+{
+  "name": "moodle-skill",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "highlight.js": "^11.11.1",
+    "jsdom": "^25.0.0",
+    "marked": "^17.0.3",
+    "marked-highlight": "^2.2.3",
+    "playwright": "^1.52.0"
+  }
+}
