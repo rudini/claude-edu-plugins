@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Edu Plugins — AI-Powered Education Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-deep: #06080d;
+  --bg-surface: #0c1018;
+  --bg-card: rgba(14, 19, 30, 0.7);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-glow: rgba(255, 255, 255, 0.1);
+  --text-primary: #e8eaf0;
+  --text-secondary: #8a90a2;
+  --text-muted: #555b6e;
+  --accent-coral: #ff6b4a;
+  --accent-amber: #ffb347;
+  --accent-violet: #a78bfa;
+  --accent-cyan: #4fd1c5;
+  --accent-blue: #60a5fa;
+  --moodle-orange: #f0932b;
+  --kahoot-purple: #864cbf;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Noise texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+/* Selection */
+::selection { background: rgba(255, 107, 74, 0.3); color: #fff; }
+
+a { color: inherit; text-decoration: none; }
+
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 1.25rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(20px) saturate(1.5);
+  background: rgba(6, 8, 13, 0.7);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: all 0.4s ease;
+}
+
+nav.scrolled {
+  padding: 0.8rem 2.5rem;
+  background: rgba(6, 8, 13, 0.92);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+
+.nav-logo-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent-coral), var(--accent-amber));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--bg-deep);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  transition: color 0.3s;
+  letter-spacing: 0.02em;
+}
+
+.nav-links a:hover { color: var(--text-primary); }
+
+.nav-cta {
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  background: rgba(255, 107, 74, 0.12);
+  border: 1px solid rgba(255, 107, 74, 0.25);
+  color: var(--accent-coral) !important;
+  font-weight: 500 !important;
+  transition: all 0.3s !important;
+}
+
+.nav-cta:hover {
+  background: rgba(255, 107, 74, 0.2) !important;
+  border-color: rgba(255, 107, 74, 0.4) !important;
+}
+
+/* ─── HERO ─── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8rem 2rem 6rem;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-bg .orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.35;
+  animation: orbFloat 20s ease-in-out infinite;
+}
+
+.hero-bg .orb-1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent-coral), transparent 70%);
+  top: -15%;
+  right: -10%;
+  animation-delay: 0s;
+}
+
+.hero-bg .orb-2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--accent-violet), transparent 70%);
+  bottom: -10%;
+  left: -10%;
+  animation-delay: -7s;
+}
+
+.hero-bg .orb-3 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, var(--accent-cyan), transparent 70%);
+  top: 40%;
+  left: 30%;
+  animation-delay: -14s;
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -30px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+/* Grid lines */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 70%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 900px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem 0.4rem 0.5rem;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-glow);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.hero-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 8px var(--accent-cyan);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.75rem;
+}
+
+.hero h1 em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--accent-coral), var(--accent-amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 620px;
+  margin: 0 auto 3rem;
+  font-weight: 300;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 2rem;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent-coral), #e85d3a);
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 24px rgba(255, 107, 74, 0.25);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(255, 107, 74, 0.35);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 2rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-glow);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* ─── SECTIONS ─── */
+section {
+  padding: 7rem 2rem;
+  position: relative;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent-coral);
+  margin-bottom: 1rem;
+}
+
+.section-label::before {
+  content: '';
+  width: 20px;
+  height: 1px;
+  background: var(--accent-coral);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 400;
+  line-height: 1.15;
+  margin-bottom: 1.25rem;
+}
+
+.section-desc {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 550px;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ─── PLUGINS SECTION ─── */
+.plugins-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 4rem;
+}
+
+.plugin-card {
+  position: relative;
+  border-radius: 16px;
+  padding: 2.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.plugin-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent, rgba(255,255,255,0.03));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+.plugin-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.plugin-card-glow {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.12;
+  top: -50px;
+  right: -50px;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+
+.plugin-card:hover .plugin-card-glow { opacity: 0.2; }
+
+.plugin-card.moodle .plugin-card-glow { background: var(--moodle-orange); }
+.plugin-card.kahoot .plugin-card-glow { background: var(--kahoot-purple); }
+
+.plugin-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.moodle .plugin-icon {
+  background: rgba(240, 147, 43, 0.12);
+  border: 1px solid rgba(240, 147, 43, 0.2);
+  color: var(--moodle-orange);
+}
+
+.kahoot .plugin-icon {
+  background: rgba(134, 76, 191, 0.12);
+  border: 1px solid rgba(134, 76, 191, 0.2);
+  color: var(--kahoot-purple);
+}
+
+.plugin-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.plugin-card p {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+.plugin-features {
+  list-style: none;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.plugin-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.plugin-features li::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.moodle .plugin-features li::before { background: var(--moodle-orange); }
+.kahoot .plugin-features li::before { background: var(--kahoot-purple); }
+
+/* ─── HOW IT WORKS ─── */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 4rem;
+}
+
+.step {
+  position: relative;
+  padding: 2rem;
+}
+
+.step-number {
+  font-family: var(--font-display);
+  font-size: 4rem;
+  color: rgba(255, 255, 255, 0.04);
+  line-height: 1;
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+
+.step-number::after {
+  content: attr(data-num);
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, var(--accent-coral), var(--accent-amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.step h3 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.step p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.step-code {
+  margin-top: 1.25rem;
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  overflow-x: auto;
+}
+
+.step-code .cmd { color: var(--accent-cyan); }
+.step-code .arg { color: var(--accent-amber); }
+.step-code .comment { color: var(--text-muted); }
+
+/* ─── TERMINAL ─── */
+.terminal-section { padding-bottom: 4rem; }
+
+.terminal-window {
+  max-width: 800px;
+  margin: 4rem auto 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0a0e17;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+}
+
+.terminal-header {
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.terminal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.terminal-dot:nth-child(1) { background: #ff5f57; }
+.terminal-dot:nth-child(2) { background: #febc2e; }
+.terminal-dot:nth-child(3) { background: #28c840; }
+
+.terminal-title {
+  flex: 1;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.terminal-body {
+  padding: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 2;
+  overflow-x: auto;
+}
+
+.terminal-body .prompt { color: var(--accent-cyan); }
+.terminal-body .command { color: var(--text-primary); }
+.terminal-body .output { color: var(--text-muted); }
+.terminal-body .success { color: var(--accent-cyan); }
+.terminal-body .flag { color: var(--accent-amber); }
+.terminal-body .string { color: var(--accent-coral); }
+
+/* ─── COMPATIBILITY ─── */
+.compat-section {
+  text-align: center;
+}
+
+.compat-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 4rem;
+  flex-wrap: wrap;
+}
+
+.compat-card {
+  width: 170px;
+  padding: 2rem 1.5rem;
+  border-radius: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  backdrop-filter: blur(10px);
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.compat-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.06), transparent);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+.compat-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.compat-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 1rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+}
+
+.compat-card h4 {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.compat-card span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ─── ARCHITECTURE ─── */
+.arch-diagram {
+  margin-top: 4rem;
+  padding: 2.5rem;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-subtle);
+  max-width: 860px;
+}
+
+.arch-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.arch-layer {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.arch-layer-label {
+  width: 100px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.arch-layer-content {
+  flex: 1;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.arch-box {
+  padding: 0.7rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  flex: 1;
+  text-align: center;
+  min-width: 120px;
+  position: relative;
+}
+
+.arch-box.ai-tool {
+  background: rgba(96, 165, 250, 0.08);
+  border: 1px solid rgba(96, 165, 250, 0.2);
+  color: var(--accent-blue);
+}
+
+.arch-box.instruction {
+  background: rgba(167, 139, 250, 0.08);
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  color: var(--accent-violet);
+}
+
+.arch-box.cli {
+  background: rgba(255, 107, 74, 0.08);
+  border: 1px solid rgba(255, 107, 74, 0.2);
+  color: var(--accent-coral);
+}
+
+.arch-box.api {
+  background: rgba(79, 209, 197, 0.08);
+  border: 1px solid rgba(79, 209, 197, 0.2);
+  color: var(--accent-cyan);
+}
+
+.arch-connector {
+  display: flex;
+  justify-content: center;
+  padding: 0.25rem 0;
+  padding-left: calc(100px + 1.5rem);
+}
+
+.arch-connector svg {
+  width: 2px;
+  height: 20px;
+}
+
+.arch-connector line {
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 2;
+  stroke-dasharray: 4 4;
+}
+
+/* ─── SAFETY ─── */
+.safety-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 4rem;
+  flex-wrap: wrap;
+}
+
+.safety-step {
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  text-align: center;
+  min-width: 180px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s;
+}
+
+.safety-step:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.safety-step-icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.safety-step h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.safety-step p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.safety-arrow {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+}
+
+/* ─── GRADING FEATURE ─── */
+.grading-section {
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 107, 74, 0.02) 50%, transparent 100%);
+}
+
+.grading-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  margin-top: 4rem;
+}
+
+.grading-visual {
+  position: relative;
+}
+
+.grading-card {
+  padding: 2rem;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-subtle);
+}
+
+.grading-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.grading-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255, 107, 74, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.grading-card-header span {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent-coral);
+}
+
+.grading-step-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.grading-step-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.grading-step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: rgba(255, 107, 74, 0.1);
+  border: 1px solid rgba(255, 107, 74, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--accent-coral);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.grading-text h3 {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+}
+
+.grading-text h3 em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--accent-coral), var(--accent-amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.grading-text p {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+}
+
+.grading-text .stat-row {
+  display: flex;
+  gap: 2rem;
+}
+
+.grading-stat {
+  text-align: left;
+}
+
+.grading-stat .num {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  background: linear-gradient(135deg, var(--accent-coral), var(--accent-amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.grading-stat .label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+/* ─── CTA ─── */
+.cta-section {
+  text-align: center;
+  padding: 8rem 2rem;
+}
+
+.cta-box {
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 4rem 3rem;
+  border-radius: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+}
+
+.cta-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255, 107, 74, 0.15), transparent 50%, rgba(167, 139, 250, 0.15));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+.cta-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-coral), transparent 70%);
+  filter: blur(80px);
+  opacity: 0.08;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.cta-box h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.cta-box p {
+  color: var(--text-secondary);
+  max-width: 450px;
+  margin: 0 auto 2rem;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.cta-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 3rem 2rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.footer-logo-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--accent-coral), var(--accent-amber));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--bg-deep);
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.footer-links a {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  transition: color 0.3s;
+}
+
+.footer-links a:hover { color: var(--text-secondary); }
+
+.footer-right {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* ─── ANIMATIONS ─── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+[data-reveal].visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-reveal-delay="1"] { transition-delay: 0.1s; }
+[data-reveal-delay="2"] { transition-delay: 0.2s; }
+[data-reveal-delay="3"] { transition-delay: 0.3s; }
+[data-reveal-delay="4"] { transition-delay: 0.4s; }
+[data-reveal-delay="5"] { transition-delay: 0.5s; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .plugins-grid { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; }
+  .grading-content { grid-template-columns: 1fr; }
+  .arch-layer { flex-direction: column; gap: 0.5rem; }
+  .arch-layer-label { width: auto; text-align: left; }
+  .arch-connector { padding-left: 0; }
+}
+
+@media (max-width: 600px) {
+  nav { padding: 1rem; }
+  .nav-links { display: none; }
+  section { padding: 4rem 1.25rem; }
+  .hero { padding: 6rem 1.25rem 4rem; }
+  .compat-grid { gap: 1rem; }
+  .compat-card { width: 140px; padding: 1.25rem 1rem; }
+  .safety-flow { flex-direction: column; }
+  .safety-arrow { transform: rotate(90deg); }
+  .cta-box { padding: 2.5rem 1.5rem; }
+  .footer-content { flex-direction: column; gap: 1rem; text-align: center; }
+  .footer-left { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">
+    <div class="nav-logo-icon">E</div>
+    Claude Edu Plugins
+  </div>
+  <ul class="nav-links">
+    <li><a href="#plugins">Plugins</a></li>
+    <li><a href="#install">Install</a></li>
+    <li><a href="#compatibility">Compatibility</a></li>
+    <li><a href="#grading">AI Grading</a></li>
+    <li><a href="https://github.com/rudini/claude-edu-plugins" target="_blank" class="nav-cta">GitHub</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="hero-grid"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge" data-reveal>
+      <span class="hero-badge-dot"></span>
+      Open Source &middot; MIT License
+    </div>
+    <h1 data-reveal data-reveal-delay="1">
+      Teach smarter with<br><em>AI-powered</em> education tools
+    </h1>
+    <p class="hero-sub" data-reveal data-reveal-delay="2">
+      Claude Code plugins for Moodle course management and Kahoot quiz creation. Manage your entire LMS from the command line, powered by any AI coding tool.
+    </p>
+    <div class="hero-actions" data-reveal data-reveal-delay="3">
+      <a href="#install" class="btn-primary">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 11l5 5 5-5M12 4v12"/></svg>
+        Install Now
+      </a>
+      <a href="https://github.com/rudini/claude-edu-plugins" target="_blank" class="btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        View on GitHub
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PLUGINS -->
+<section id="plugins">
+  <div class="container">
+    <div class="section-label" data-reveal>Plugins</div>
+    <h2 class="section-title" data-reveal data-reveal-delay="1">Two tools, one mission</h2>
+    <p class="section-desc" data-reveal data-reveal-delay="2">Everything you need to manage your educational content, directly from your AI-powered terminal.</p>
+
+    <div class="plugins-grid">
+      <div class="plugin-card moodle" data-reveal data-reveal-delay="1">
+        <div class="plugin-card-glow"></div>
+        <div class="plugin-icon">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        </div>
+        <h3>Moodle Skill</h3>
+        <p>Full course management from your terminal. Create, update, and organize activities, sections, quizzes and more &mdash; no browser needed.</p>
+        <ul class="plugin-features">
+          <li>Create &amp; manage activities, pages, URLs, forums</li>
+          <li>Quiz creation with GIFT question import</li>
+          <li>Section management (move, rename, duplicate)</li>
+          <li>AI-powered essay grading pipeline</li>
+          <li>Label and page content editing</li>
+          <li>Dry-run safety for all destructive ops</li>
+        </ul>
+      </div>
+
+      <div class="plugin-card kahoot" data-reveal data-reveal-delay="2">
+        <div class="plugin-card-glow"></div>
+        <div class="plugin-icon">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+        </div>
+        <h3>Kahoot Skill</h3>
+        <p>Create engaging quizzes from structured JSON definitions. Preview, validate, and publish directly to Kahoot.</p>
+        <ul class="plugin-features">
+          <li>JSON-based quiz definitions</li>
+          <li>Preview &amp; validation before publishing</li>
+          <li>Dry-run mode with visual diff</li>
+          <li>List &amp; manage existing quizzes</li>
+          <li>Browser-based login flow</li>
+          <li>AI can generate quiz JSON from any topic</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="install">
+  <div class="container">
+    <div class="section-label" data-reveal>Get Started</div>
+    <h2 class="section-title" data-reveal data-reveal-delay="1">Three commands to get going</h2>
+    <p class="section-desc" data-reveal data-reveal-delay="2">Install from the Claude Code plugin marketplace in seconds.</p>
+
+    <div class="steps">
+      <div class="step" data-reveal data-reveal-delay="1">
+        <div class="step-number" data-num="01">01</div>
+        <h3>Add the marketplace</h3>
+        <p>Register the edu-plugins marketplace to access both skills.</p>
+        <div class="step-code">
+          <span class="cmd">/plugin</span> <span class="arg">marketplace add</span> rudini/claude-edu-plugins
+        </div>
+      </div>
+
+      <div class="step" data-reveal data-reveal-delay="2">
+        <div class="step-number" data-num="02">02</div>
+        <h3>Install the plugins</h3>
+        <p>Pick the skills you need &mdash; Moodle, Kahoot, or both.</p>
+        <div class="step-code">
+          <span class="cmd">/plugin</span> <span class="arg">install</span> moodle-skill@claude-edu-plugins<br>
+          <span class="cmd">/plugin</span> <span class="arg">install</span> kahoot-skill@claude-edu-plugins
+        </div>
+      </div>
+
+      <div class="step" data-reveal data-reveal-delay="3">
+        <div class="step-number" data-num="03">03</div>
+        <h3>Configure &amp; teach</h3>
+        <p>Set your Moodle URL and course ID, then start managing your course.</p>
+        <div class="step-code">
+          <span class="cmd">/moodle-skill:moodle</span> <span class="arg">login</span><br>
+          <span class="cmd">/moodle-skill:moodle</span> <span class="arg">structure</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TERMINAL SHOWCASE -->
+<section class="terminal-section">
+  <div class="container">
+    <div class="terminal-window" data-reveal>
+      <div class="terminal-header">
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+        <span class="terminal-title">claude-code &mdash; edu-plugins</span>
+      </div>
+      <div class="terminal-body" id="terminal-body">
+        <div><span class="prompt">$</span> <span class="command">/moodle-skill:moodle structure</span></div>
+        <div class="output">&nbsp;</div>
+        <div class="success">Course: Introduction to Computer Science (ID: 1042)</div>
+        <div class="output">&nbsp;</div>
+        <div class="output">  Section 1 &mdash; Week 1: Fundamentals</div>
+        <div class="output">    ├── [page]   Welcome &amp; Syllabus</div>
+        <div class="output">    ├── [url]    Course Slides</div>
+        <div class="output">    └── [quiz]   Week 1 Assessment</div>
+        <div class="output">&nbsp;</div>
+        <div class="output">  Section 2 &mdash; Week 2: Data Structures</div>
+        <div class="output">    ├── [page]   Arrays &amp; Linked Lists</div>
+        <div class="output">    ├── [assign] Homework 2</div>
+        <div class="output">    └── [forum]  Discussion: Best Practices</div>
+        <div class="output">&nbsp;</div>
+        <div><span class="prompt">$</span> <span class="command">/moodle-skill:moodle create-quiz <span class="flag">3</span> <span class="string">"Midterm Exam"</span></span></div>
+        <div class="output">&nbsp;</div>
+        <div class="success">&#10003; Created quiz "Midterm Exam" in Section 3 (dry-run)</div>
+        <div class="output">  Add <span class="flag">--live</span> to execute</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPATIBILITY -->
+<section id="compatibility" class="compat-section">
+  <div class="container">
+    <div class="section-label" data-reveal>Compatibility</div>
+    <h2 class="section-title" data-reveal data-reveal-delay="1" style="margin-left:auto;margin-right:auto;">Works with your favorite AI tool</h2>
+    <p class="section-desc" data-reveal data-reveal-delay="2" style="margin-left:auto;margin-right:auto;">Not just Claude Code. The underlying CLI scripts work with any AI tool that can execute shell commands.</p>
+
+    <div class="compat-grid">
+      <div class="compat-card" data-reveal data-reveal-delay="1">
+        <div class="compat-icon" style="color: var(--accent-coral);">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M21.624 7.2L12.372.6a.75.75 0 00-.744 0L2.376 7.2a.75.75 0 00-.376.65v8.3a.75.75 0 00.376.65l9.252 6.6a.75.75 0 00.744 0l9.252-6.6a.75.75 0 00.376-.65v-8.3a.75.75 0 00-.376-.65z"/></svg>
+        </div>
+        <h4>Claude Code</h4>
+        <span>Native plugin</span>
+      </div>
+
+      <div class="compat-card" data-reveal data-reveal-delay="2">
+        <div class="compat-icon" style="color: var(--accent-blue);">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        </div>
+        <h4>Copilot</h4>
+        <span>Instructions file</span>
+      </div>
+
+      <div class="compat-card" data-reveal data-reveal-delay="3">
+        <div class="compat-icon" style="color: var(--accent-cyan);">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg>
+        </div>
+        <h4>Codex</h4>
+        <span>AGENTS.md</span>
+      </div>
+
+      <div class="compat-card" data-reveal data-reveal-delay="4">
+        <div class="compat-icon" style="color: var(--accent-violet);">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13.325 3.05L8.667 20.432l1.932.518 4.658-17.382-1.932-.518zM7.612 18.36l1.36-1.448L4.14 12l4.831-4.912-1.36-1.448L1 12l6.612 6.36zM16.388 5.64l-1.36 1.448L19.86 12l-4.831 4.912 1.36 1.448L23 12l-6.612-6.36z"/></svg>
+        </div>
+        <h4>Cursor</h4>
+        <span>Rules + MCP</span>
+      </div>
+
+      <div class="compat-card" data-reveal data-reveal-delay="5">
+        <div class="compat-icon" style="color: var(--accent-amber);">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <h4>Windsurf</h4>
+        <span>AI Rules</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section id="architecture">
+  <div class="container">
+    <div class="section-label" data-reveal>Architecture</div>
+    <h2 class="section-title" data-reveal data-reveal-delay="1">Simple, modular design</h2>
+    <p class="section-desc" data-reveal data-reveal-delay="2">The AI tool talks to CLI scripts, which talk to APIs. Swap any layer.</p>
+
+    <div class="arch-diagram" data-reveal data-reveal-delay="3">
+      <div class="arch-layers">
+        <div class="arch-layer">
+          <div class="arch-layer-label">AI Layer</div>
+          <div class="arch-layer-content">
+            <div class="arch-box ai-tool">Claude Code</div>
+            <div class="arch-box ai-tool">Copilot</div>
+            <div class="arch-box ai-tool">Codex</div>
+            <div class="arch-box ai-tool">Cursor</div>
+            <div class="arch-box ai-tool">Windsurf</div>
+          </div>
+        </div>
+
+        <div class="arch-connector">
+          <svg viewBox="0 0 2 20"><line x1="1" y1="0" x2="1" y2="20"/></svg>
+        </div>
+
+        <div class="arch-layer">
+          <div class="arch-layer-label">Instructions</div>
+          <div class="arch-layer-content">
+            <div class="arch-box instruction">SKILL.md</div>
+            <div class="arch-box instruction">copilot-instructions.md</div>
+            <div class="arch-box instruction">AGENTS.md</div>
+            <div class="arch-box instruction">.cursor/rules</div>
+          </div>
+        </div>
+
+        <div class="arch-connector">
+          <svg viewBox="0 0 2 20"><line x1="1" y1="0" x2="1" y2="20"/></svg>
+        </div>
+
+        <div class="arch-layer">
+          <div class="arch-layer-label">CLI Scripts</div>
+          <div class="arch-layer-content">
+            <div class="arch-box cli">moodle-updater.js</div>
+            <div class="arch-box cli">kahoot-creator.js</div>
+            <div class="arch-box cli">grade-essay.js</div>
+          </div>
+        </div>
+
+        <div class="arch-connector">
+          <svg viewBox="0 0 2 20"><line x1="1" y1="0" x2="1" y2="20"/></svg>
+        </div>
+
+        <div class="arch-layer">
+          <div class="arch-layer-label">APIs</div>
+          <div class="arch-layer-content">
+            <div class="arch-box api">Moodle Web Services</div>
+            <div class="arch-box api">Kahoot REST API</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SAFETY -->
+<section>
+  <div class="container" style="text-align:center;">
+    <div class="section-label" data-reveal style="justify-content:center;">Safety</div>
+    <h2 class="section-title" data-reveal data-reveal-delay="1" style="margin-left:auto;margin-right:auto;">Safety-first by design</h2>
+    <p class="section-desc" data-reveal data-reveal-delay="2" style="margin-left:auto;margin-right:auto;">Every destructive operation follows a three-step safety pattern. Nothing goes live without your explicit confirmation.</p>
+
+    <div class="safety-flow" data-reveal data-reveal-delay="3">
+      <div class="safety-step">
+        <div class="safety-step-icon">
+          <svg width="32" height="32" fill="none" stroke="var(--accent-amber)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+        </div>
+        <h4>Dry Run</h4>
+        <p>Preview all changes<br>before they happen</p>
+      </div>
+
+      <div class="safety-arrow">&rarr;</div>
+
+      <div class="safety-step">
+        <div class="safety-step-icon">
+          <svg width="32" height="32" fill="none" stroke="var(--accent-violet)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h4>Confirm</h4>
+        <p>Review output and<br>approve the changes</p>
+      </div>
+
+      <div class="safety-arrow">&rarr;</div>
+
+      <div class="safety-step">
+        <div class="safety-step-icon">
+          <svg width="32" height="32" fill="none" stroke="var(--accent-cyan)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <h4>Go Live</h4>
+        <p>Execute with the<br><code style="color:var(--accent-amber);font-family:var(--font-mono);font-size:0.75rem;">--live</code> flag</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI GRADING -->
+<section id="grading" class="grading-section">
+  <div class="container">
+    <div class="grading-content">
+      <div class="grading-text" data-reveal>
+        <div class="section-label">Flagship Feature</div>
+        <h3>AI-powered<br><em>essay grading</em></h3>
+        <p>Scrape student submissions from Moodle, grade them with AI using GIFT rubrics, review the results, and submit grades back &mdash; all from your terminal.</p>
+        <div class="stat-row">
+          <div class="grading-stat">
+            <div class="num">10x</div>
+            <div class="label">Faster grading</div>
+          </div>
+          <div class="grading-stat">
+            <div class="num">100%</div>
+            <div class="label">Human-reviewed</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grading-visual" data-reveal data-reveal-delay="2">
+        <div class="grading-card">
+          <div class="grading-card-header">
+            <div class="grading-card-icon">
+              <svg width="16" height="16" fill="none" stroke="var(--accent-coral)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            </div>
+            <span>grading pipeline</span>
+          </div>
+          <ol class="grading-step-list">
+            <li>
+              <span class="grading-step-num">1</span>
+              <span>Scrape all essay submissions from Moodle assignment</span>
+            </li>
+            <li>
+              <span class="grading-step-num">2</span>
+              <span>Load GIFT rubric for structured grading criteria</span>
+            </li>
+            <li>
+              <span class="grading-step-num">3</span>
+              <span>AI grades each submission with detailed feedback</span>
+            </li>
+            <li>
+              <span class="grading-step-num">4</span>
+              <span>Review results in grading.json &mdash; edit any grade</span>
+            </li>
+            <li>
+              <span class="grading-step-num">5</span>
+              <span>Submit approved grades back to Moodle with <code style="color:var(--accent-amber);font-family:var(--font-mono);font-size:0.78rem;">--live</code></span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-box" data-reveal>
+    <div class="cta-glow"></div>
+    <h2>Support this project</h2>
+    <p>If these plugins save you time, consider sponsoring to support ongoing development and new features.</p>
+    <div class="cta-actions">
+      <a href="https://github.com/sponsors/rudini" target="_blank" class="btn-primary">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        Sponsor on GitHub
+      </a>
+      <a href="https://github.com/rudini/claude-edu-plugins" target="_blank" class="btn-secondary">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+        Star on GitHub
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-left">
+      <div class="footer-logo">
+        <div class="footer-logo-icon">E</div>
+        Claude Edu Plugins
+      </div>
+      <ul class="footer-links">
+        <li><a href="https://github.com/rudini/claude-edu-plugins" target="_blank">GitHub</a></li>
+        <li><a href="https://github.com/rudini/claude-edu-plugins/blob/main/LICENSE" target="_blank">MIT License</a></li>
+        <li><a href="https://github.com/sponsors/rudini" target="_blank">Sponsor</a></li>
+      </ul>
+    </div>
+    <div class="footer-right">
+      Built for educators, by educators.
+    </div>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('[data-reveal]').forEach(el => observer.observe(el));
+
+// Nav scroll effect
+const nav = document.getElementById('nav');
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  nav.classList.toggle('scrolled', scrollY > 50);
+  lastScroll = scrollY;
+}, { passive: true });
+
+// Smooth nav link scrolling
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// Terminal typing effect on scroll
+let terminalAnimated = false;
+const terminalObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !terminalAnimated) {
+      terminalAnimated = true;
+      animateTerminal();
+    }
+  });
+}, { threshold: 0.3 });
+
+const terminalEl = document.querySelector('.terminal-window');
+if (terminalEl) terminalObs.observe(terminalEl);
+
+function animateTerminal() {
+  const lines = document.querySelectorAll('.terminal-body > div');
+  lines.forEach((line, i) => {
+    line.style.opacity = '0';
+    line.style.transform = 'translateY(5px)';
+    line.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+    setTimeout(() => {
+      line.style.opacity = '1';
+      line.style.transform = 'translateY(0)';
+    }, i * 80);
+  });
+}
+
+// Parallax orbs on mouse move
+document.addEventListener('mousemove', (e) => {
+  const x = (e.clientX / window.innerWidth - 0.5) * 2;
+  const y = (e.clientY / window.innerHeight - 0.5) * 2;
+  document.querySelectorAll('.orb').forEach((orb, i) => {
+    const speed = (i + 1) * 8;
+    orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+  });
+}, { passive: true });
+</script>
+
+</body>
+</html>
