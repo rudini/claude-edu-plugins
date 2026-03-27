@@ -1370,11 +1370,24 @@ function updateEnvFile(key, value) {
   writeFileSync(envPath, content, 'utf-8');
 }
 
+async function ensurePlaywrightBrowser() {
+  const { execSync } = await import('child_process');
+  try {
+    // Quick check: can Playwright resolve a Chromium executable?
+    const { chromium } = await import('playwright');
+    chromium.executablePath();
+  } catch {
+    console.log('Chromium not found — installing automatically (one-time)...\n');
+    execSync('npx playwright install chromium', { stdio: 'inherit' });
+  }
+}
+
 async function cmdLogin() {
   if (!process.stdin.isTTY) {
     console.error('Fehler: login erfordert ein interaktives Terminal.');
     process.exit(1);
   }
+  await ensurePlaywrightBrowser();
   console.log(`Opening browser for Moodle login (${MOODLE_URL})...\n`);
   const { chromium } = await import('playwright');
   const profileDir = resolve(process.cwd(), '.browser-profile');

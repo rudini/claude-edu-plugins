@@ -13,9 +13,6 @@ Claude Code plugins for education tools — **Moodle** course management and **K
 
 # Install Kahoot skill (optional)
 /plugin install kahoot-skill@claude-edu-plugins
-
-# One-time: Install Playwright browser (needed for login commands)
-npx playwright install chromium
 ```
 
 ## Moodle Skill

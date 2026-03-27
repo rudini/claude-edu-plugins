@@ -17,7 +17,7 @@ Manage any Moodle course via the `moodle-updater.js` CLI. All destructive operat
 
 - **`.env`** in your project root with `MOODLE_URL`, `MOODLE_SESSION`, and `COURSE_ID`
 - **Dependencies**: Auto-installed on first session via hooks (jsdom, marked, playwright)
-- **Playwright browser**: Run `npx playwright install chromium` once for the `login` command
+- **Playwright browser**: Installed automatically on first `login` command
 
 ## Workflow
 

@@ -303,11 +303,24 @@ function updateEnvFile(key, value) {
 
 // --- Login ---
 
+async function ensurePlaywrightBrowser() {
+  const { execSync } = await import('child_process');
+  try {
+    // Quick check: can Playwright resolve a Chromium executable?
+    const { chromium } = await import('playwright');
+    chromium.executablePath();
+  } catch {
+    console.log('Chromium not found — installing automatically (one-time)...\n');
+    execSync('npx playwright install chromium', { stdio: 'inherit' });
+  }
+}
+
 async function cmdLogin() {
   if (!process.stdin.isTTY) {
     console.error('Error: login requires an interactive terminal.');
     process.exit(1);
   }
+  await ensurePlaywrightBrowser();
   console.log('Opening browser for Kahoot login...\n');
   const { chromium } = await import('playwright');
   const profileDir = resolve(__dirname, '.browser-profile');

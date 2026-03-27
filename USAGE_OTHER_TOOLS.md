@@ -40,9 +40,6 @@ cd plugins/moodle-skill && npm install && cd ../..
 
 # Kahoot plugin
 cd plugins/kahoot-skill && npm install && cd ../..
-
-# For login commands (both plugins)
-npx playwright install chromium
 ```
 
 ## Step 2: Configure Environment
