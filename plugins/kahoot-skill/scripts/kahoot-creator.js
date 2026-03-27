@@ -306,13 +306,19 @@ function updateEnvFile(key, value) {
 async function ensureDependencies() {
   const { execSync } = await import('child_process');
   const dataDir = process.env.CLAUDE_PLUGIN_DATA;
+  const pluginRoot = process.env.CLAUDE_PLUGIN_ROOT || resolve(__dirname, '..');
   if (!dataDir) return; // not running as plugin
 
-  const targetPkg = resolve(dataDir, 'package.json');
   if (!existsSync(resolve(dataDir, 'node_modules', 'playwright'))) {
     console.log('Dependencies not found — installing automatically (one-time)...\n');
-    const srcPkg = resolve(__dirname, '..', 'package.json');
-    execSync(`cp "${srcPkg}" "${targetPkg}" && cd "${dataDir}" && npm install --ignore-scripts`, { stdio: 'inherit' });
+    const srcPkg = resolve(pluginRoot, 'package.json');
+    execSync(`cp "${srcPkg}" "${resolve(dataDir, 'package.json')}" && cd "${dataDir}" && npm install --ignore-scripts`, { stdio: 'inherit' });
+  }
+  // ESM ignores NODE_PATH — symlink node_modules into plugin root so imports resolve
+  const link = resolve(pluginRoot, 'node_modules');
+  if (!existsSync(link)) {
+    const { symlinkSync } = await import('fs');
+    symlinkSync(resolve(dataDir, 'node_modules'), link);
   }
 }
 
@@ -325,7 +331,7 @@ async function ensurePlaywrightBrowser() {
     chromium.executablePath();
   } catch {
     console.log('Chromium not found — installing automatically (one-time)...\n');
-    execSync('npx playwright install chromium', { stdio: 'inherit' });
+    execSync('npx playwright install chromium', { stdio: 'inherit', cwd: resolve(process.env.CLAUDE_PLUGIN_DATA || '.') });
   }
 }
 

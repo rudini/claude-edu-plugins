@@ -3,7 +3,7 @@
     "SessionStart": [{
       "hooks": [{
         "type": "command",
-        "command": "diff -q \"${CLAUDE_PLUGIN_ROOT}/package.json\" \"${CLAUDE_PLUGIN_DATA}/package.json\" >/dev/null 2>&1 || (cp \"${CLAUDE_PLUGIN_ROOT}/package.json\" \"${CLAUDE_PLUGIN_DATA}/\" && cd \"${CLAUDE_PLUGIN_DATA}\" && npm install --ignore-scripts) || rm -f \"${CLAUDE_PLUGIN_DATA}/package.json\""
+        "command": "diff -q \"${CLAUDE_PLUGIN_ROOT}/package.json\" \"${CLAUDE_PLUGIN_DATA}/package.json\" >/dev/null 2>&1 || (cp \"${CLAUDE_PLUGIN_ROOT}/package.json\" \"${CLAUDE_PLUGIN_DATA}/\" && cd \"${CLAUDE_PLUGIN_DATA}\" && npm install --ignore-scripts && ln -sfn \"${CLAUDE_PLUGIN_DATA}/node_modules\" \"${CLAUDE_PLUGIN_ROOT}/node_modules\") || rm -f \"${CLAUDE_PLUGIN_DATA}/package.json\"; test -L \"${CLAUDE_PLUGIN_ROOT}/node_modules\" || ln -sfn \"${CLAUDE_PLUGIN_DATA}/node_modules\" \"${CLAUDE_PLUGIN_ROOT}/node_modules\""
       }]
     }]
   }

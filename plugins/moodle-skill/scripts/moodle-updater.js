@@ -1373,13 +1373,19 @@ function updateEnvFile(key, value) {
 async function ensureDependencies() {
   const { execSync } = await import('child_process');
   const dataDir = process.env.CLAUDE_PLUGIN_DATA;
-  if (!dataDir) return;
+  const pluginRoot = process.env.CLAUDE_PLUGIN_ROOT;
+  if (!dataDir || !pluginRoot) return;
 
   if (!existsSync(resolve(dataDir, 'node_modules', 'playwright'))) {
     console.log('Dependencies not found — installing automatically (one-time)...\n');
-    const pluginRoot = process.env.CLAUDE_PLUGIN_ROOT;
     const srcPkg = resolve(pluginRoot, 'package.json');
     execSync(`cp "${srcPkg}" "${resolve(dataDir, 'package.json')}" && cd "${dataDir}" && npm install --ignore-scripts`, { stdio: 'inherit' });
+  }
+  // ESM ignores NODE_PATH — symlink node_modules into plugin root so imports resolve
+  const link = resolve(pluginRoot, 'node_modules');
+  if (!existsSync(link)) {
+    const { symlinkSync } = await import('fs');
+    symlinkSync(resolve(dataDir, 'node_modules'), link);
   }
 }
 
