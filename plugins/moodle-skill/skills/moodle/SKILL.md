@@ -28,7 +28,7 @@ Manage any Moodle course via the `moodle-updater.js` CLI. All destructive operat
 
 ### Phase 2: Dry-Run
 
-**`login` command**: Execute directly — opens a browser for interactive authentication.
+**`login` command**: Execute directly — opens a browser for authentication. The browser auto-closes once login is detected. Supports `--browser msedge` or `--browser chrome` for SSO.
 
 **Read-only commands** (`structure`, `list-activities`, `show-label`, `show-page`, `dump-form`, `dump-grading`): Execute directly.
 
@@ -50,7 +50,7 @@ NODE_PATH="${CLAUDE_PLUGIN_DATA}/node_modules" node "${CLAUDE_PLUGIN_ROOT}/scrip
 
 | Group | Command | Arguments | Description |
 |-------|---------|-----------|-------------|
-| **Setup** | `login` | — | Open browser, login, save cookie to .env |
+| **Setup** | `login` | `[--browser msedge\|chrome]` | Open browser, login, save cookie to .env (auto-closes) |
 | **Read** | `structure` | — | Show course structure |
 | **Read** | `list-activities` | `<sectionId>` | List activities in a section |
 | **Read** | `show-label` | `<moduleId>` | Show label HTML |
@@ -104,7 +104,7 @@ NODE_PATH="${CLAUDE_PLUGIN_DATA}/node_modules" node "${CLAUDE_PLUGIN_ROOT}/scrip
 
 ## Session Handling
 
-- **Primary method**: `login` opens a browser, user logs in, cookie is saved to `.env`.
+- **Primary method**: `login` opens a browser, user logs in, browser auto-closes once login is detected, and cookie is saved to `.env`. Use `--browser msedge` or `--browser chrome` for SSO.
 - The `MoodleSession` cookie expires after inactivity. If a command fails with a session error, run `login` again.
 - Use `structure` as a quick connection test.
 

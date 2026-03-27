@@ -16,7 +16,7 @@ Create and manage Kahoot quizzes from JSON definitions via the `kahoot-creator.j
 ## Prerequisites
 
 - **`.env`** in your project root with `KAHOOT_TOKEN`
-- **Token**: Run `login` to authenticate via browser (saves token automatically)
+- **Token**: Run `login` to authenticate via browser (auto-detects login, browser closes automatically). Use `login --browser msedge` for SSO via Edge.
 - **Quiz JSON**: A `.json` file with quiz definition (see format below)
 
 ## Workflow
@@ -46,7 +46,7 @@ NODE_PATH="${CLAUDE_PLUGIN_DATA}/node_modules" node "${CLAUDE_PLUGIN_ROOT}/scrip
 
 | Command | Arguments | Description |
 |---------|-----------|-------------|
-| `login` | — | Open browser, login, save token to .env |
+| `login` | `[--browser msedge\|chrome]` | Open browser, login, save token to .env (auto-closes) |
 | `preview` | `<quiz.json>` | Validate and show quiz structure (no API call) |
 | `create` | `<quiz.json> [--live]` | Create quiz via Kahoot API |
 | `list` | — | List all own Kahoots |

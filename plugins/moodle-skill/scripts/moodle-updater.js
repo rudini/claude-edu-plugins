@@ -1403,27 +1403,31 @@ async function ensurePlaywrightBrowser() {
 }
 
 async function cmdLogin() {
-  if (!process.stdin.isTTY) {
-    console.error('Fehler: login erfordert ein interaktives Terminal.');
-    process.exit(1);
-  }
   await ensurePlaywrightBrowser();
-  console.log(`Opening browser for Moodle login (${MOODLE_URL})...\n`);
+  const browserFlag = args[args.indexOf('--browser') + 1];
+  const channel = ['msedge', 'chrome'].includes(browserFlag) ? browserFlag : undefined;
+  console.log(`Opening browser for Moodle login (${MOODLE_URL})...${channel ? ` (${channel})` : ''}\n`);
   const { chromium } = await import('playwright');
   const profileDir = resolve(process.cwd(), '.browser-profile');
   const context = await chromium.launchPersistentContext(profileDir, {
     headless: false,
-    args: ['--no-first-run'],
+    channel,
+    args: ['--no-first-run', '--disable-blink-features=AutomationControlled'],
+    ignoreDefaultArgs: ['--enable-automation'],
   });
   const page = context.pages()[0] || await context.newPage();
   await page.goto(`${MOODLE_URL}/login/index.php`);
 
-  const rl = await import('readline');
-  const iface = rl.createInterface({ input: process.stdin, output: process.stdout });
-  await new Promise(resolve => iface.question(
-    'Log in via the browser, then press ENTER here... ',
-    () => { iface.close(); resolve(); }
-  ));
+  console.log('Waiting for login... (browser will close automatically)');
+
+  // Auto-detect: wait until the page navigates away from the login page
+  try {
+    await page.waitForURL(url => !url.pathname.includes('/login/'), { timeout: 120000 });
+  } catch {
+    console.error('Error: Login timed out after 2 minutes.');
+    await context.close();
+    process.exit(1);
+  }
 
   const cookies = await context.cookies(MOODLE_URL);
   const sessionCookie = cookies.find(c => c.name === 'MoodleSession');
@@ -1443,6 +1447,7 @@ function showHelp() {
 
 Setup:
   login                                      Open browser, log in, save cookie automatically
+  login --browser msedge                     Use Edge for SSO (also: chrome)
   -- or manually: --
   1. Create .env with MOODLE_URL, COURSE_ID, MOODLE_SESSION
   2. MOODLE_SESSION: Browser > Dev Tools > Application > Cookies > MoodleSession
@@ -1535,7 +1540,7 @@ if (args.includes('--help') || args.includes('-h') || args.length === 0) {
 const live = args.includes('--live');
 
 // Filter out --flag and --flag <value> pairs for flags that take values
-const valueFlagNames = ['--open', '--due', '--gift', '--slot', '--model', '--report'];
+const valueFlagNames = ['--open', '--due', '--gift', '--slot', '--model', '--report', '--browser'];
 const cleanArgs = args.filter((a, i) => {
   if (a.startsWith('--')) return false;
   // Skip values that follow a value-flag

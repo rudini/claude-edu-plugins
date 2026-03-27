@@ -336,59 +336,51 @@ async function ensurePlaywrightBrowser() {
 }
 
 async function cmdLogin() {
-  if (!process.stdin.isTTY) {
-    console.error('Error: login requires an interactive terminal.');
-    process.exit(1);
-  }
   await ensurePlaywrightBrowser();
-  console.log('Opening browser for Kahoot login...\n');
+  const browserFlag = args[args.indexOf('--browser') + 1];
+  const channel = ['msedge', 'chrome'].includes(browserFlag) ? browserFlag : undefined;
+  console.log(`Opening browser for Kahoot login...${channel ? ` (${channel})` : ''}\n`);
   const { chromium } = await import('playwright');
   const profileDir = resolve(__dirname, '.browser-profile');
   const context = await chromium.launchPersistentContext(profileDir, {
     headless: false,
-    args: ['--no-first-run'],
+    channel,
+    args: ['--no-first-run', '--disable-blink-features=AutomationControlled'],
+    ignoreDefaultArgs: ['--enable-automation'],
   });
   const page = context.pages()[0] || await context.newPage();
 
   let capturedToken = null;
-  const tokenListener = request => {
-    const url = request.url();
-    if (url.includes('/rest/') || url.includes('/api/')) {
-      const auth = request.headers()['authorization'];
-      if (auth && auth.startsWith('Bearer ')) {
-        capturedToken = auth.replace('Bearer ', '');
-      }
-    }
-  };
-  context.on('request', tokenListener);
 
-  await page.goto('https://create.kahoot.it/auth/login');
-
-  const rl = await import('readline');
-  const iface = rl.createInterface({ input: process.stdin, output: process.stdout });
-  await new Promise(resolve => iface.question(
-    'Log in via the browser, then press ENTER here... ',
-    () => { iface.close(); resolve(); }
-  ));
-
-  context.off('request', tokenListener);
-
-  if (!capturedToken) {
-    console.log('No token captured from requests, navigating to dashboard...');
-    const tokenPromise = new Promise(resolve => {
-      const handler = request => {
+  // Auto-detect: resolve as soon as a Bearer token is captured
+  const tokenCaptured = new Promise(resolve => {
+    context.on('request', request => {
+      const url = request.url();
+      if (url.includes('/rest/') || url.includes('/api/')) {
         const auth = request.headers()['authorization'];
         if (auth && auth.startsWith('Bearer ')) {
           capturedToken = auth.replace('Bearer ', '');
-          context.off('request', handler);
           resolve();
         }
-      };
-      context.on('request', handler);
-      setTimeout(() => resolve(), 10000);
+      }
     });
+  });
+
+  await page.goto('https://create.kahoot.it/auth/login');
+  console.log('Waiting for login... (browser will close automatically)');
+
+  // Wait up to 2 minutes for token capture
+  await Promise.race([
+    tokenCaptured,
+    new Promise(resolve => setTimeout(resolve, 120000)),
+  ]);
+
+  // Fallback: navigate to dashboard to trigger API calls
+  if (!capturedToken) {
+    console.log('No token captured yet, navigating to dashboard...');
+    const fallback = Promise.race([tokenCaptured, new Promise(r => setTimeout(r, 10000))]);
     await page.goto('https://create.kahoot.it/kahoots/authored');
-    await tokenPromise;
+    await fallback;
   }
 
   if (!capturedToken) {
@@ -420,11 +412,13 @@ Commands:
   list                       List existing Kahoots for the authenticated user
 
 Flags:
-  --live       Actually execute changes (default: dry run)
-  --help, -h   Show this help
+  --live              Actually execute changes (default: dry run)
+  --browser <name>    Use a specific browser: msedge, chrome (default: bundled chromium)
+  --help, -h          Show this help
 
 Examples:
   node kahoot-creator.js login
+  node kahoot-creator.js login --browser msedge
   node kahoot-creator.js preview ./quizzes/my-quiz.json
   node kahoot-creator.js create ./quizzes/my-quiz.json
   node kahoot-creator.js create ./quizzes/my-quiz.json --live

@@ -56,7 +56,7 @@ COURSE_ID=1234
 KAHOOT_TOKEN=
 ```
 
-Authenticate by running the login commands directly:
+Authenticate by running the login commands directly. The browser opens, you log in, and it closes automatically once login is detected:
 
 ```bash
 # Moodle — opens browser, saves session cookie to .env
@@ -64,6 +64,10 @@ node path/to/claude-edu-plugins/plugins/moodle-skill/scripts/moodle-updater.js l
 
 # Kahoot — opens browser, saves token to .env
 node path/to/claude-edu-plugins/plugins/kahoot-skill/scripts/kahoot-creator.js login
+
+# Use --browser flag for SSO (Edge or Chrome)
+node path/to/moodle-updater.js login --browser msedge
+node path/to/kahoot-creator.js login --browser chrome
 ```
 
 ## Step 3: Verify CLI Works Standalone
@@ -329,6 +333,7 @@ Then configure it in your AI tool:
 ## Tips
 
 - **Path management**: Use absolute paths to the CLI scripts, or add the plugin directories to your `PATH`.
-- **Session expiry**: The Moodle session cookie expires. Re-run the `login` command when you get authentication errors.
+- **Session expiry**: The Moodle session cookie expires. Re-run the `login` command when you get authentication errors. The browser auto-closes after login.
+- **SSO / browser choice**: Both `login` commands support `--browser msedge` or `--browser chrome` for organizations that require a specific browser for single sign-on.
 - **Dry-run safety**: All tools enforce a dry-run → confirm → `--live` pattern. Make sure your instructions to the AI emphasize this workflow regardless of which tool you use.
 - **GIFT format**: The quiz import uses standard [GIFT format](https://docs.moodle.org/en/GIFT_format). All AI tools can generate GIFT syntax if you describe the question format.

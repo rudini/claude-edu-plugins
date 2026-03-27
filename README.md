@@ -29,11 +29,13 @@ MOODLE_SESSION=
 COURSE_ID=1234
 ```
 
-Then authenticate:
+Then authenticate (browser opens and closes automatically after login):
 
 ```
 /moodle-skill:moodle login
 ```
+
+Use `--browser msedge` or `--browser chrome` if your org requires a specific browser for SSO.
 
 ### Quick Start
 
@@ -48,7 +50,7 @@ Then authenticate:
 
 | Group | Command | Description |
 |-------|---------|-------------|
-| Setup | `login` | Browser login, save cookie |
+| Setup | `login [--browser msedge\|chrome]` | Browser login, save cookie (auto-closes) |
 | Read | `structure`, `list-activities`, `show-label`, `show-page` | Inspect course |
 | Update | `update-label`, `update-page`, `update-summary` | Modify content |
 | CRUD | `create-url`, `create-page`, `create-resource`, `create-assign`, `create-forum`, `create-quiz` | Create activities |
@@ -68,7 +70,7 @@ Create and manage Kahoot quizzes from JSON definitions.
 /kahoot-skill:kahoot login
 ```
 
-Or create `.env` manually with `KAHOOT_TOKEN=...`
+Use `--browser msedge` or `--browser chrome` for SSO. Or create `.env` manually with `KAHOOT_TOKEN=...`
 
 ### Quick Start
 
