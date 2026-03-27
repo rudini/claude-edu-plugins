@@ -1370,8 +1370,22 @@ function updateEnvFile(key, value) {
   writeFileSync(envPath, content, 'utf-8');
 }
 
+async function ensureDependencies() {
+  const { execSync } = await import('child_process');
+  const dataDir = process.env.CLAUDE_PLUGIN_DATA;
+  if (!dataDir) return;
+
+  if (!existsSync(resolve(dataDir, 'node_modules', 'playwright'))) {
+    console.log('Dependencies not found — installing automatically (one-time)...\n');
+    const pluginRoot = process.env.CLAUDE_PLUGIN_ROOT;
+    const srcPkg = resolve(pluginRoot, 'package.json');
+    execSync(`cp "${srcPkg}" "${resolve(dataDir, 'package.json')}" && cd "${dataDir}" && npm install --ignore-scripts`, { stdio: 'inherit' });
+  }
+}
+
 async function ensurePlaywrightBrowser() {
   const { execSync } = await import('child_process');
+  await ensureDependencies();
   try {
     // Quick check: can Playwright resolve a Chromium executable?
     const { chromium } = await import('playwright');
