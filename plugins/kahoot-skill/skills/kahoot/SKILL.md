@@ -1,13 +1,13 @@
 ---
 name: kahoot
-description: "Create and manage Kahoot quizzes from JSON definitions. Use /kahoot-skill:kahoot to create, preview, or list quizzes."
+description: "Create, manage, and host Kahoot quizzes from JSON definitions. Use /kahoot-skill:kahoot to create, preview, list, or host quizzes."
 argument-hint: "[command] [args...]"
 disable-model-invocation: true
 ---
 
-# Kahoot Skill — Quiz Management
+# Kahoot Skill — Quiz Management & Hosting
 
-Create and manage Kahoot quizzes from JSON definitions via the `kahoot-creator.js` CLI.
+Create, manage, and host Kahoot quizzes from JSON definitions via the `kahoot-creator.js` CLI.
 
 ## When This Skill Activates
 
@@ -42,6 +42,12 @@ NODE_PATH="${CLAUDE_PLUGIN_DATA}/node_modules" node "${CLAUDE_PLUGIN_ROOT}/scrip
 NODE_PATH="${CLAUDE_PLUGIN_DATA}/node_modules" node "${CLAUDE_PLUGIN_ROOT}/scripts/kahoot-creator.js" create <quiz.json> --live
 ```
 
+**`host`**: Execute directly — opens the game lobby in the default browser. Accepts a quiz UUID, Kahoot URL, or a quiz JSON file.
+
+```bash
+NODE_PATH="${CLAUDE_PLUGIN_DATA}/node_modules" node "${CLAUDE_PLUGIN_ROOT}/scripts/kahoot-creator.js" host <uuid|url|quiz.json>
+```
+
 ## Command Reference
 
 | Command | Arguments | Description |
@@ -50,6 +56,7 @@ NODE_PATH="${CLAUDE_PLUGIN_DATA}/node_modules" node "${CLAUDE_PLUGIN_ROOT}/scrip
 | `preview` | `<quiz.json>` | Validate and show quiz structure (no API call) |
 | `create` | `<quiz.json> [--live]` | Create quiz via Kahoot API |
 | `list` | — | List all own Kahoots |
+| `host` | `<uuid\|url\|quiz.json>` | Open game lobby in default browser |
 
 ## Quiz JSON Format
 

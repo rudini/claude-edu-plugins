@@ -1,0 +1,98 @@
+{
+  "title": "Minecraft Knowledge Quiz",
+  "description": "Test your knowledge of the world of Minecraft!",
+  "language": "en",
+  "timeLimit": 20,
+  "questions": [
+    {
+      "question": "What material do you need to mine diamonds?",
+      "choices": [
+        { "answer": "Iron pickaxe (or better)", "correct": true },
+        { "answer": "Stone pickaxe", "correct": false },
+        { "answer": "Wooden pickaxe", "correct": false },
+        { "answer": "Gold pickaxe", "correct": false }
+      ]
+    },
+    {
+      "question": "What do you get when you kill an Enderman?",
+      "choices": [
+        { "answer": "Ender pearl", "correct": true },
+        { "answer": "Blaze rod", "correct": false },
+        { "answer": "Diamond", "correct": false },
+        { "answer": "Gold nugget", "correct": false }
+      ]
+    },
+    {
+      "question": "How many obsidian blocks are needed to build a Nether portal?",
+      "choices": [
+        { "answer": "10", "correct": true },
+        { "answer": "8", "correct": false },
+        { "answer": "12", "correct": false },
+        { "answer": "14", "correct": false }
+      ]
+    },
+    {
+      "question": "What food gives the most hunger points in Minecraft?",
+      "choices": [
+        { "answer": "Golden carrot", "correct": true },
+        { "answer": "Steak", "correct": false },
+        { "answer": "Cooked porkchop", "correct": false },
+        { "answer": "Bread", "correct": false }
+      ]
+    },
+    {
+      "question": "Which mob explodes when it gets close to you?",
+      "choices": [
+        { "answer": "Creeper", "correct": true },
+        { "answer": "Zombie", "correct": false },
+        { "answer": "Skeleton", "correct": false },
+        { "answer": "Spider", "correct": false }
+      ]
+    },
+    {
+      "question": "What do you need to tame a wolf in Minecraft?",
+      "choices": [
+        { "answer": "Bone", "correct": true },
+        { "answer": "Steak", "correct": false },
+        { "answer": "Fish", "correct": false },
+        { "answer": "Apple", "correct": false }
+      ]
+    },
+    {
+      "question": "What dimension do you enter when you throw an Eye of Ender into a portal?",
+      "choices": [
+        { "answer": "The End", "correct": true },
+        { "answer": "The Nether", "correct": false },
+        { "answer": "The Aether", "correct": false },
+        { "answer": "The Deep Dark", "correct": false }
+      ]
+    },
+    {
+      "question": "What is the rarest ore in Minecraft?",
+      "choices": [
+        { "answer": "Emerald", "correct": true },
+        { "answer": "Diamond", "correct": false },
+        { "answer": "Gold", "correct": false },
+        { "answer": "Lapis Lazuli", "correct": false }
+      ]
+    },
+    {
+      "question": "What happens if you sleep in a bed in the Nether?",
+      "choices": [
+        { "answer": "It explodes", "correct": true },
+        { "answer": "You respawn there", "correct": false },
+        { "answer": "Nothing happens", "correct": false },
+        { "answer": "It turns to obsidian", "correct": false }
+      ]
+    },
+    {
+      "question": "What is the name of the final boss in Minecraft?",
+      "choices": [
+        { "answer": "Ender Dragon", "correct": true },
+        { "answer": "Wither", "correct": false },
+        { "answer": "Elder Guardian", "correct": false },
+        { "answer": "Warden", "correct": false }
+      ]
+    }
+  ]
+}

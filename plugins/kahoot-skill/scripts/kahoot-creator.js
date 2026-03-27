@@ -3,12 +3,14 @@
 /**
  * kahoot-creator.js
  *
- * Creates Kahoot quizzes from JSON definitions via the Kahoot API.
+ * Creates, manages, and hosts Kahoot quizzes from JSON definitions via the Kahoot API.
  *
  * Usage:
+ *   node kahoot-creator.js login [--browser msedge|chrome]
  *   node kahoot-creator.js preview <quiz.json>
- *   node kahoot-creator.js create <quiz.json> --live
+ *   node kahoot-creator.js create <quiz.json> [--live]
  *   node kahoot-creator.js list
+ *   node kahoot-creator.js host <uuid|url|quiz.json>
  */
 
 import { readFileSync, writeFileSync, existsSync } from 'fs';
@@ -394,6 +396,42 @@ async function cmdLogin() {
   await context.close();
 }
 
+// --- Host Game ---
+
+async function cmdHost(quizIdentifier) {
+  // Resolve quiz UUID — either a direct UUID, a Kahoot URL, or a quiz JSON file
+  let uuid = quizIdentifier;
+  if (quizIdentifier.endsWith('.json')) {
+    const resolved = resolveQuizJson(quizIdentifier);
+    const quiz = loadAndValidateQuiz(resolved);
+    console.log(`Looking up quiz "${quiz.title}"...`);
+    const userId = getUserIdFromToken();
+    const resp = await kahootFetch(`https://create.kahoot.it/rest/folders/${userId}`);
+    const data = await resp.json();
+    const entities = data.kahoots?.entities || [];
+    const match = entities.find(e => e.card.title === quiz.title);
+    if (match) {
+      uuid = match.card.uuid;
+      console.log(`Found: ${uuid}`);
+    } else {
+      throw new Error(`Quiz "${quiz.title}" not found on Kahoot. Create it first with: create ${quizIdentifier} --live`);
+    }
+  } else if (quizIdentifier.includes('create.kahoot.it/details/')) {
+    uuid = quizIdentifier.split('/details/')[1].split(/[?#]/)[0];
+  }
+
+  const hostUrl = `https://play.kahoot.it/v2/?quizId=${uuid}`;
+  console.log(`\nOpening: ${hostUrl}\n`);
+  console.log('In the browser:');
+  console.log('  1. Skip islands ("Weiter ohne Insel" / "Continue without island")');
+  console.log('  2. Select Classic or Team mode');
+  console.log('  3. Click Start');
+  console.log('  4. Share the Game PIN with players → https://kahoot.it\n');
+
+  const { execSync } = await import('child_process');
+  execSync(`open "${hostUrl}"`);
+}
+
 // --- Help ---
 
 function showHelp() {
@@ -410,6 +448,7 @@ Commands:
   create <quiz.json>         Create quiz via Kahoot API (dry run by default)
   create <quiz.json> --live  Create quiz for real
   list                       List existing Kahoots for the authenticated user
+  host <uuid|url|json>         Open game lobby in default browser
 
 Flags:
   --live              Actually execute changes (default: dry run)
@@ -423,6 +462,8 @@ Examples:
   node kahoot-creator.js create ./quizzes/my-quiz.json
   node kahoot-creator.js create ./quizzes/my-quiz.json --live
   node kahoot-creator.js list
+  node kahoot-creator.js host b7f105da-996d-46c6-bd22-4447ba05923a
+  node kahoot-creator.js host ./quizzes/my-quiz.json
 
 Quiz JSON format:
   {
@@ -473,6 +514,11 @@ try {
 
     case 'list':
       await cmdList();
+      break;
+
+    case 'host':
+      if (!cleanArgs[1]) throw new Error('Usage: host <uuid|url|quiz.json>');
+      await cmdHost(cleanArgs[1]);
       break;
 
     default:
