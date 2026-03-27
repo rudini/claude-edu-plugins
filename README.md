@@ -115,6 +115,14 @@ Or create `.env` manually with `KAHOOT_TOKEN=...`
 |----------|----------|-------------|
 | `KAHOOT_TOKEN` | Yes | Bearer token (set via `login` command) |
 
+## Support This Project
+
+If these plugins save you time, consider sponsoring to support ongoing development:
+
+[![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-pink?style=for-the-badge&logo=github-sponsors)](https://github.com/sponsors/rudini)
+
+Even a small contribution helps keep this project maintained and improved. Thank you!
+
 ## License
 
 MIT
