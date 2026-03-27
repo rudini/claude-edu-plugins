@@ -115,6 +115,12 @@ Or create `.env` manually with `KAHOOT_TOKEN=...`
 |----------|----------|-------------|
 | `KAHOOT_TOKEN` | Yes | Bearer token (set via `login` command) |
 
+## Using with Other AI Tools
+
+Not using Claude Code? The underlying CLI scripts work with **any AI coding tool** that can execute shell commands — GitHub Copilot, OpenAI Codex, Cursor, Windsurf, and more.
+
+See **[USAGE_OTHER_TOOLS.md](USAGE_OTHER_TOOLS.md)** for setup instructions, per-tool configuration, and an MCP server wrapper example.
+
 ## Support This Project
 
 If these plugins save you time, consider sponsoring to support ongoing development:
