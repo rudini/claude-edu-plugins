@@ -1,0 +1,20 @@
+{
+  "name": "claude-edu-plugins-video",
+  "version": "1.0.0",
+  "description": "Marketing video for Claude Edu Plugins",
+  "scripts": {
+    "screenshots": "node capture-screenshots.mjs",
+    "dev": "npx remotion studio src/index.tsx",
+    "build": "npx remotion render src/index.tsx KahootDemo out/kahoot-demo.mp4 --codec h264"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.441",
+    "@remotion/transitions": "^4.0.441",
+    "@types/react": "^19.2.14",
+    "playwright": "^1.58.2",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "remotion": "^4.0.441",
+    "typescript": "^6.0.2"
+  }
+}
