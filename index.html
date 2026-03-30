@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,10 @@
 <meta name="keywords" content="Claude Code, Moodle, Kahoot, education, AI, LMS, quiz, grading, plugins, open source">
 <meta name="author" content="rudini">
 <meta name="robots" content="index, follow">
+<meta name="theme-color" content="#06080d">
 <link rel="canonical" href="https://rudini.github.io/claude-edu-plugins/">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -16,11 +19,15 @@
 <meta property="og:description" content="Open-source plugins for Moodle course management and Kahoot quiz creation. Manage your entire LMS from the command line, powered by any AI coding tool.">
 <meta property="og:url" content="https://rudini.github.io/claude-edu-plugins/">
 <meta property="og:site_name" content="Claude Edu Plugins">
+<meta property="og:image" content="https://rudini.github.io/claude-edu-plugins/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Claude Edu Plugins — AI-Powered Education Tools">
 <meta name="twitter:description" content="Open-source plugins for Moodle course management and Kahoot quiz creation, powered by AI.">
+<meta name="twitter:image" content="https://rudini.github.io/claude-edu-plugins/og-image.jpg">
 
 <!-- Structured Data -->
 <script type="application/ld+json">
@@ -41,7 +48,8 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -64,6 +72,22 @@
   --font-display: 'DM Serif Display', Georgia, serif;
   --font-body: 'Outfit', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 10000;
+  padding: 8px 16px;
+  background: var(--accent-coral);
+  color: #fff;
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 16px;
 }
 
 html { scroll-behavior: smooth; }
@@ -1268,10 +1292,13 @@ footer {
 </head>
 <body>
 
+<!-- SKIP TO CONTENT -->
+<a href="#plugins" class="skip-link">Skip to content</a>
+
 <!-- NAV -->
-<nav id="nav">
+<nav id="nav" aria-label="Main navigation">
   <div class="nav-logo">
-    <div class="nav-logo-icon">E</div>
+    <div class="nav-logo-icon" aria-hidden="true">E</div>
     Claude Edu Plugins
   </div>
   <ul class="nav-links">
@@ -1280,13 +1307,14 @@ footer {
     <li><a href="#install">Install</a></li>
     <li><a href="#compatibility">Compatibility</a></li>
     <li><a href="#grading">AI Grading</a></li>
-    <li><a href="https://github.com/rudini/claude-edu-plugins" target="_blank" class="nav-cta">GitHub</a></li>
+    <li><a href="https://github.com/rudini/claude-edu-plugins" target="_blank" rel="noopener" class="nav-cta">GitHub</a></li>
   </ul>
 </nav>
 
+<main>
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-bg">
+  <div class="hero-bg" aria-hidden="true">
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
@@ -1312,7 +1340,7 @@ footer {
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         Watch Demo
       </a>
-      <a href="https://github.com/rudini/claude-edu-plugins" target="_blank" class="btn-secondary">
+      <a href="https://github.com/rudini/claude-edu-plugins" target="_blank" rel="noopener" class="btn-secondary">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
         View on GitHub
       </a>
@@ -1330,7 +1358,7 @@ footer {
     <h2 class="video-title" data-reveal data-reveal-delay="1">From CLI to classroom in seconds</h2>
     <p class="video-subtitle" data-reveal data-reveal-delay="2">Watch a Stranger Things quiz get created, launched, and played &mdash; all from the terminal.</p>
     <div class="video-wrapper" data-reveal data-reveal-delay="3">
-      <video src="kahoot-demo.mp4" autoplay loop muted playsinline></video>
+      <video src="kahoot-demo.mp4" poster="kahoot-demo-poster.jpg" preload="none" autoplay loop muted playsinline aria-label="Demo video showing Kahoot quiz creation from the terminal"></video>
     </div>
   </div>
 </section>
@@ -1670,17 +1698,19 @@ footer {
     <h2>Support this project</h2>
     <p>If these plugins save you time, consider sponsoring to support ongoing development and new features.</p>
     <div class="cta-actions">
-      <a href="https://github.com/sponsors/rudini" target="_blank" class="btn-primary">
+      <a href="https://github.com/sponsors/rudini" target="_blank" rel="noopener" class="btn-primary">
         <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
         Sponsor on GitHub
       </a>
-      <a href="https://github.com/rudini/claude-edu-plugins" target="_blank" class="btn-secondary">
+      <a href="https://github.com/rudini/claude-edu-plugins" target="_blank" rel="noopener" class="btn-secondary">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
         Star on GitHub
       </a>
     </div>
   </div>
 </section>
+
+</main>
 
 <!-- FOOTER -->
 <footer>
@@ -1691,9 +1721,9 @@ footer {
         Claude Edu Plugins
       </div>
       <ul class="footer-links">
-        <li><a href="https://github.com/rudini/claude-edu-plugins" target="_blank">GitHub</a></li>
-        <li><a href="https://github.com/rudini/claude-edu-plugins/blob/main/LICENSE" target="_blank">MIT License</a></li>
-        <li><a href="https://github.com/sponsors/rudini" target="_blank">Sponsor</a></li>
+        <li><a href="https://github.com/rudini/claude-edu-plugins" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://github.com/rudini/claude-edu-plugins/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a></li>
+        <li><a href="https://github.com/sponsors/rudini" target="_blank" rel="noopener">Sponsor</a></li>
       </ul>
     </div>
     <div class="footer-right">
