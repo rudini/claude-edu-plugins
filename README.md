@@ -116,9 +116,27 @@ Use `--browser msedge` or `--browser chrome` for SSO. Or create `.env` manually 
 
 ## Using with Other AI Tools
 
-Not using Claude Code? The underlying CLI scripts work with **any AI coding tool** that can execute shell commands — GitHub Copilot, OpenAI Codex, Cursor, Windsurf, and more.
+Not using Claude Code? This project includes a ready-to-use **MCP server** that works with any MCP-compatible agent — GitHub Copilot, OpenAI Codex, Cursor, Windsurf, Gemini CLI, and more.
 
-See **[USAGE_OTHER_TOOLS.md](USAGE_OTHER_TOOLS.md)** for setup instructions, per-tool configuration, and an MCP server wrapper example.
+```bash
+# Install the MCP server
+cd plugins/mcp-server && npm install
+```
+
+Then add it to your tool's MCP config (e.g. `.vscode/mcp.json`, `.codex/mcp.json`, `~/.gemini/settings.json`):
+
+```json
+{
+  "servers": {
+    "edu-plugins": {
+      "command": "node",
+      "args": ["/path/to/claude-edu-plugins/plugins/mcp-server/mcp-edu-server.js"]
+    }
+  }
+}
+```
+
+See **[USAGE_OTHER_TOOLS.md](USAGE_OTHER_TOOLS.md)** for per-tool configuration, instruction file alternatives, and the full list of 31 MCP tools.
 
 ## Support This Project
 

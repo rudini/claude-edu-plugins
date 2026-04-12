@@ -65,11 +65,12 @@ export const TerminalScene: React.FC = () => {
           position: "absolute",
           top: 60,
           left: 100,
-          fontFamily: "monospace",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 14,
           letterSpacing: 3,
           textTransform: "uppercase",
-          color: "#ff6b4a",
+          fontWeight: 600,
+          color: "#2563eb",
           opacity: interpolate(frame, [0, 30], [0, 0.7], { extrapolateRight: "clamp" }),
         }}
       >
@@ -83,9 +84,9 @@ export const TerminalScene: React.FC = () => {
           maxWidth: 1400,
           borderRadius: 16,
           overflow: "hidden",
-          background: "#0a0e17",
-          border: "1px solid rgba(255,255,255,0.06)",
-          boxShadow: "0 40px 120px rgba(0,0,0,0.6)",
+          background: "#1e293b",
+          border: "1px solid #334155",
+          boxShadow: "0 25px 80px rgba(0,0,0,0.15)",
           transform: `scale(${Math.min(terminalScale, 1)})`,
         }}
       >
@@ -96,8 +97,8 @@ export const TerminalScene: React.FC = () => {
             display: "flex",
             alignItems: "center",
             gap: 8,
-            background: "rgba(255,255,255,0.02)",
-            borderBottom: "1px solid rgba(255,255,255,0.05)",
+            background: "#0f172a",
+            borderBottom: "1px solid #334155",
           }}
         >
           <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#ff5f57" }} />
@@ -107,9 +108,9 @@ export const TerminalScene: React.FC = () => {
             style={{
               flex: 1,
               textAlign: "center",
-              fontFamily: "monospace",
+              fontFamily: "'JetBrains Mono', monospace",
               fontSize: 13,
-              color: "#555b6e",
+              color: "#64748b",
             }}
           >
             claude-code &mdash; kahoot-skill
@@ -137,10 +138,10 @@ export const TerminalScene: React.FC = () => {
             }
 
             const colorMap: Record<string, string> = {
-              prompt: "#4fd1c5",
-              output: "#555b6e",
-              success: "#4fd1c5",
-              json: "#8a90a2",
+              prompt: "#38bdf8",
+              output: "#64748b",
+              success: "#22c55e",
+              json: "#94a3b8",
             };
 
             let rendered = line.text || "";
@@ -148,12 +149,6 @@ export const TerminalScene: React.FC = () => {
 
             if (line.type === "prompt") {
               const dollarEnd = 2;
-              parts = [
-                <span key="dollar" style={{ color: "#4fd1c5" }}>$ </span>,
-                <span key="cmd" style={{ color: "#e8eaf0" }}>
-                  {rendered.slice(dollarEnd)}
-                </span>,
-              ];
               // Typing effect for prompt
               const charsToShow = Math.floor(
                 interpolate(
@@ -164,8 +159,8 @@ export const TerminalScene: React.FC = () => {
                 )
               );
               parts = [
-                <span key="dollar" style={{ color: "#4fd1c5" }}>$ </span>,
-                <span key="cmd" style={{ color: "#e8eaf0" }}>
+                <span key="dollar" style={{ color: "#38bdf8" }}>$ </span>,
+                <span key="cmd" style={{ color: "#e2e8f0" }}>
                   {rendered.slice(dollarEnd, dollarEnd + charsToShow)}
                 </span>,
                 // Cursor
@@ -176,7 +171,7 @@ export const TerminalScene: React.FC = () => {
                       display: "inline-block",
                       width: 10,
                       height: 20,
-                      background: "#4fd1c5",
+                      background: "#38bdf8",
                       marginLeft: 2,
                       opacity: Math.sin(frame * 0.3) > 0 ? 1 : 0,
                       verticalAlign: "middle",
@@ -198,11 +193,11 @@ export const TerminalScene: React.FC = () => {
                   key="json"
                   dangerouslySetInnerHTML={{
                     __html: highlighted
-                      .replace(/<key>/g, '<span style="color:#60a5fa">')
+                      .replace(/<key>/g, '<span style="color:#93c5fd">')
                       .replace(/<\/key>/g, "</span>")
-                      .replace(/<str>/g, '<span style="color:#ffb347">')
+                      .replace(/<str>/g, '<span style="color:#fbbf24">')
                       .replace(/<\/str>/g, "</span>")
-                      .replace(/<bool>/g, '<span style="color:#4fd1c5">')
+                      .replace(/<bool>/g, '<span style="color:#22c55e">')
                       .replace(/<\/bool>/g, "</span>"),
                   }}
                 />,
@@ -210,16 +205,15 @@ export const TerminalScene: React.FC = () => {
             }
 
             if (line.type === "success") {
-              parts = [<span key="s" style={{ color: "#4fd1c5" }}>{rendered}</span>];
+              parts = [<span key="s" style={{ color: "#22c55e" }}>{rendered}</span>];
             }
 
             // Highlight --live flag
             if (rendered.includes("--live")) {
               const flagStyle = {
-                color: "#ffb347",
+                color: "#fbbf24",
                 fontWeight: 700 as const,
               };
-              // Re-render with highlighted flag
               if (line.type === "prompt") {
                 const cmdText = rendered.slice(2);
                 const charsToShow2 = Math.floor(
@@ -233,15 +227,15 @@ export const TerminalScene: React.FC = () => {
                 const shown = cmdText.slice(0, charsToShow2);
                 const liveIdx = shown.indexOf("--live");
                 parts = [
-                  <span key="dollar" style={{ color: "#4fd1c5" }}>$ </span>,
+                  <span key="dollar" style={{ color: "#38bdf8" }}>$ </span>,
                   liveIdx >= 0 ? (
-                    <span key="cmd" style={{ color: "#e8eaf0" }}>
+                    <span key="cmd" style={{ color: "#e2e8f0" }}>
                       {shown.slice(0, liveIdx)}
                       <span style={flagStyle}>--live</span>
                       {shown.slice(liveIdx + 6)}
                     </span>
                   ) : (
-                    <span key="cmd" style={{ color: "#e8eaf0" }}>{shown}</span>
+                    <span key="cmd" style={{ color: "#e2e8f0" }}>{shown}</span>
                   ),
                 ];
               }
@@ -254,7 +248,7 @@ export const TerminalScene: React.FC = () => {
                   fontFamily: "'JetBrains Mono', 'SF Mono', 'Fira Code', monospace",
                   fontSize: 16,
                   lineHeight: 1.9,
-                  color: colorMap[line.type] || "#8a90a2",
+                  color: colorMap[line.type] || "#94a3b8",
                   opacity: lineOpacity,
                   transform: `translateY(${lineSlide}px)`,
                   whiteSpace: "pre",

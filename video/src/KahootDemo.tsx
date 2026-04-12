@@ -10,13 +10,13 @@ export const KahootDemo: React.FC = () => {
   const frame = useCurrentFrame();
 
   return (
-    <AbsoluteFill style={{ background: "#06080d" }}>
+    <AbsoluteFill style={{ background: "#ffffff" }}>
       {/* Animated background gradient */}
       <AbsoluteFill
         style={{
-          background: `radial-gradient(ellipse at ${50 + Math.sin(frame / 60) * 10}% ${50 + Math.cos(frame / 80) * 10}%, rgba(255,107,74,0.08) 0%, transparent 50%),
-                       radial-gradient(ellipse at ${30 + Math.cos(frame / 70) * 15}% ${70 + Math.sin(frame / 50) * 10}%, rgba(134,76,191,0.06) 0%, transparent 50%),
-                       #06080d`,
+          background: `radial-gradient(ellipse at ${50 + Math.sin(frame / 60) * 10}% ${50 + Math.cos(frame / 80) * 10}%, rgba(37,99,235,0.06) 0%, transparent 50%),
+                       radial-gradient(ellipse at ${30 + Math.cos(frame / 70) * 15}% ${70 + Math.sin(frame / 50) * 10}%, rgba(124,58,237,0.04) 0%, transparent 50%),
+                       #ffffff`,
         }}
       />
 

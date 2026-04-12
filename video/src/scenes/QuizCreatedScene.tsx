@@ -46,8 +46,8 @@ export const QuizCreatedScene: React.FC = () => {
               width: 120,
               height: 120,
               borderRadius: "50%",
-              background: "rgba(79, 209, 197, 0.1)",
-              border: "2px solid rgba(79, 209, 197, 0.3)",
+              background: "rgba(34, 197, 94, 0.08)",
+              border: "2px solid rgba(34, 197, 94, 0.25)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -60,7 +60,7 @@ export const QuizCreatedScene: React.FC = () => {
               height="60"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#4fd1c5"
+              stroke="#22c55e"
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -71,21 +71,21 @@ export const QuizCreatedScene: React.FC = () => {
 
           <h2
             style={{
-              fontFamily: "Georgia, serif",
+              fontFamily: "'Inter', system-ui, sans-serif",
               fontSize: 48,
-              color: "#e8eaf0",
+              color: "#111827",
               margin: "0 0 16px",
-              fontWeight: 400,
+              fontWeight: 700,
             }}
           >
             Quiz Created!
           </h2>
           <p
             style={{
-              fontFamily: "system-ui, sans-serif",
+              fontFamily: "'Inter', system-ui, sans-serif",
               fontSize: 22,
-              color: "#8a90a2",
-              fontWeight: 300,
+              color: "#4b5563",
+              fontWeight: 400,
             }}
           >
             10 questions ready to play
@@ -118,8 +118,8 @@ export const QuizCreatedScene: React.FC = () => {
                 style={{
                   padding: "14px 20px",
                   borderRadius: 10,
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.06)",
+                  background: "#f9fafb",
+                  border: "1px solid #e5e7eb",
                   display: "flex",
                   alignItems: "center",
                   gap: 14,
@@ -129,9 +129,9 @@ export const QuizCreatedScene: React.FC = () => {
               >
                 <span
                   style={{
-                    fontFamily: "monospace",
+                    fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 13,
-                    color: "#ff6b4a",
+                    color: "#2563eb",
                     fontWeight: 600,
                     width: 28,
                     textAlign: "right",
@@ -141,10 +141,10 @@ export const QuizCreatedScene: React.FC = () => {
                 </span>
                 <span
                   style={{
-                    fontFamily: "system-ui, sans-serif",
+                    fontFamily: "'Inter', system-ui, sans-serif",
                     fontSize: 17,
-                    color: "#8a90a2",
-                    fontWeight: 300,
+                    color: "#4b5563",
+                    fontWeight: 400,
                   }}
                 >
                   {q}

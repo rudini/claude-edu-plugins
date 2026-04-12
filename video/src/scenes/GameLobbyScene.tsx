@@ -17,7 +17,7 @@ export const GameLobbyScene: React.FC = () => {
         justifyContent: "center",
         alignItems: "center",
         opacity: fadeIn * fadeOut,
-        background: "linear-gradient(180deg, #1a0a2e 0%, #06080d 100%)",
+        background: "linear-gradient(180deg, #ede9fe 0%, #ffffff 100%)",
       }}
     >
       {/* Scene label */}
@@ -26,11 +26,12 @@ export const GameLobbyScene: React.FC = () => {
           position: "absolute",
           top: 60,
           left: 100,
-          fontFamily: "monospace",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 14,
           letterSpacing: 3,
           textTransform: "uppercase",
-          color: "#a78bfa",
+          fontWeight: 600,
+          color: "#7c3aed",
           opacity: interpolate(frame, [0, 30], [0, 0.7], { extrapolateRight: "clamp" }),
         }}
       >
@@ -43,11 +44,12 @@ export const GameLobbyScene: React.FC = () => {
         <div
           style={{
             marginBottom: 20,
-            fontFamily: "system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 18,
-            color: "#8a90a2",
+            color: "#6b7280",
             letterSpacing: 2,
             textTransform: "uppercase",
+            fontWeight: 600,
             opacity: interpolate(frame, [10, 25], [0, 1], { extrapolateRight: "clamp" }),
           }}
         >
@@ -55,14 +57,13 @@ export const GameLobbyScene: React.FC = () => {
         </div>
         <div
           style={{
-            fontFamily: "system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 96,
             fontWeight: 800,
-            color: "#e8eaf0",
+            color: "#111827",
             letterSpacing: 12,
             marginBottom: 50,
             transform: `scale(${Math.min(pinScale, 1)})`,
-            textShadow: "0 0 40px rgba(167,139,250,0.3)",
           }}
         >
           4 8 2 7 3 1
@@ -71,9 +72,10 @@ export const GameLobbyScene: React.FC = () => {
         {/* Title */}
         <div
           style={{
-            fontFamily: "Georgia, serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 36,
-            color: "#e8eaf0",
+            fontWeight: 600,
+            color: "#111827",
             marginBottom: 50,
             opacity: interpolate(frame, [20, 35], [0, 1], { extrapolateRight: "clamp" }),
           }}
@@ -95,7 +97,7 @@ export const GameLobbyScene: React.FC = () => {
               config: { damping: 10, stiffness: 120 },
             });
 
-            const colors = ["#ff6b4a", "#a78bfa", "#4fd1c5", "#ffb347", "#60a5fa", "#ff6b9d"];
+            const colors = ["#2563eb", "#7c3aed", "#059669", "#ea580c", "#0891b2", "#e11d48"];
 
             return (
               <div
@@ -103,9 +105,9 @@ export const GameLobbyScene: React.FC = () => {
                 style={{
                   padding: "12px 24px",
                   borderRadius: 12,
-                  background: `${colors[i]}15`,
-                  border: `1px solid ${colors[i]}40`,
-                  fontFamily: "system-ui, sans-serif",
+                  background: `${colors[i]}10`,
+                  border: `1px solid ${colors[i]}30`,
+                  fontFamily: "'Inter', system-ui, sans-serif",
                   fontSize: 18,
                   fontWeight: 600,
                   color: colors[i],
@@ -123,9 +125,9 @@ export const GameLobbyScene: React.FC = () => {
         <div
           style={{
             marginTop: 40,
-            fontFamily: "system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 20,
-            color: "#555b6e",
+            color: "#9ca3af",
             opacity: interpolate(frame, [85, 95], [0, 1], { extrapolateRight: "clamp" }),
           }}
         >

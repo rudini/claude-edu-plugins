@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Claude Edu Plugins — AI-Powered Education Tools for Moodle & Kahoot</title>
-<meta name="description" content="Open-source Claude Code plugins for education. Manage Moodle courses, create Kahoot quizzes, and grade essays with AI — all from your terminal. Works with Claude Code, Copilot, Codex, Cursor, and Windsurf.">
+<meta name="description" content="Open-source Claude Code plugins for education. Manage Moodle courses, create Kahoot quizzes, and grade essays with AI — all from your terminal. Works with Claude Code, Copilot, Codex, Cursor, Windsurf, and Gemini CLI.">
 <meta name="keywords" content="Claude Code, Moodle, Kahoot, education, AI, LMS, quiz, grading, plugins, open source">
 <meta name="author" content="rudini">
 <meta name="robots" content="index, follow">
-<meta name="theme-color" content="#06080d">
+<meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="https://rudini.github.io/claude-edu-plugins/">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -48,29 +48,32 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg-deep: #06080d;
-  --bg-surface: #0c1018;
-  --bg-card: rgba(14, 19, 30, 0.7);
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-glow: rgba(255, 255, 255, 0.1);
-  --text-primary: #e8eaf0;
-  --text-secondary: #8a90a2;
-  --text-muted: #555b6e;
-  --accent-coral: #ff6b4a;
-  --accent-amber: #ffb347;
-  --accent-violet: #a78bfa;
-  --accent-cyan: #4fd1c5;
-  --accent-blue: #60a5fa;
-  --moodle-orange: #f0932b;
-  --kahoot-purple: #864cbf;
-  --font-display: 'DM Serif Display', Georgia, serif;
-  --font-body: 'Outfit', system-ui, sans-serif;
+  --bg-deep: #ffffff;
+  --bg-surface: #f9fafb;
+  --bg-card: #ffffff;
+  --border-subtle: #e5e7eb;
+  --border-glow: #d1d5db;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #9ca3af;
+  --accent-primary: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-light: #eff6ff;
+  --accent-coral: #2563eb;
+  --accent-amber: #1d4ed8;
+  --accent-violet: #7c3aed;
+  --accent-cyan: #059669;
+  --accent-blue: #2563eb;
+  --moodle-orange: #ea580c;
+  --kahoot-purple: #7c3aed;
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
@@ -80,7 +83,7 @@
   left: 16px;
   z-index: 10000;
   padding: 8px 16px;
-  background: var(--accent-coral);
+  background: var(--accent-primary);
   color: #fff;
   border-radius: 4px;
   font-weight: 600;
@@ -100,23 +103,18 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Noise texture overlay */
+/* Noise texture overlay — removed for clean look */
 body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 9999;
+  display: none;
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-deep); }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+::-webkit-scrollbar-track { background: #f9fafb; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
 
 /* Selection */
-::selection { background: rgba(255, 107, 74, 0.3); color: #fff; }
+::selection { background: rgba(37, 99, 235, 0.15); color: #111827; }
 
 a { color: inherit; text-decoration: none; }
 
@@ -127,19 +125,20 @@ nav {
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 1.25rem 2.5rem;
+  padding: 1rem 2.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  backdrop-filter: blur(20px) saturate(1.5);
-  background: rgba(6, 8, 13, 0.7);
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.85);
   border-bottom: 1px solid var(--border-subtle);
-  transition: all 0.4s ease;
+  transition: all 0.2s ease;
 }
 
 nav.scrolled {
   padding: 0.8rem 2.5rem;
-  background: rgba(6, 8, 13, 0.92);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .nav-logo {
@@ -156,13 +155,13 @@ nav.scrolled {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent-coral), var(--accent-amber));
+  background: var(--accent-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--bg-deep);
+  color: #ffffff;
 }
 
 .nav-links {
@@ -173,9 +172,9 @@ nav.scrolled {
 
 .nav-links a {
   font-size: 0.85rem;
-  font-weight: 400;
+  font-weight: 500;
   color: var(--text-secondary);
-  transition: color 0.3s;
+  transition: color 0.2s;
   letter-spacing: 0.02em;
 }
 
@@ -184,22 +183,21 @@ nav.scrolled {
 .nav-cta {
   padding: 0.5rem 1.25rem;
   border-radius: 6px;
-  background: rgba(255, 107, 74, 0.12);
-  border: 1px solid rgba(255, 107, 74, 0.25);
-  color: var(--accent-coral) !important;
+  background: var(--accent-primary) !important;
+  border: none;
+  color: #ffffff !important;
   font-weight: 500 !important;
-  transition: all 0.3s !important;
+  transition: background 0.2s !important;
 }
 
 .nav-cta:hover {
-  background: rgba(255, 107, 74, 0.2) !important;
-  border-color: rgba(255, 107, 74, 0.4) !important;
+  background: var(--accent-hover) !important;
 }
 
 /* ─── HERO ─── */
 .hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 85vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -214,57 +212,11 @@ nav.scrolled {
   z-index: 0;
 }
 
-.hero-bg .orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.35;
-  animation: orbFloat 20s ease-in-out infinite;
-}
+.hero-bg .orb { display: none; }
+.hero-bg .orb-1, .hero-bg .orb-2, .hero-bg .orb-3 { display: none; }
 
-.hero-bg .orb-1 {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, var(--accent-coral), transparent 70%);
-  top: -15%;
-  right: -10%;
-  animation-delay: 0s;
-}
-
-.hero-bg .orb-2 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, var(--accent-violet), transparent 70%);
-  bottom: -10%;
-  left: -10%;
-  animation-delay: -7s;
-}
-
-.hero-bg .orb-3 {
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, var(--accent-cyan), transparent 70%);
-  top: 40%;
-  left: 30%;
-  animation-delay: -14s;
-}
-
-@keyframes orbFloat {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(40px, -30px) scale(1.05); }
-  66% { transform: translate(-20px, 20px) scale(0.95); }
-}
-
-/* Grid lines */
-.hero-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 70%);
-}
+/* Grid lines — removed */
+.hero-grid { display: none; }
 
 .hero-content {
   position: relative;
@@ -279,43 +231,33 @@ nav.scrolled {
   gap: 0.5rem;
   padding: 0.4rem 1rem 0.4rem 0.5rem;
   border-radius: 100px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-glow);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
   font-size: 0.8rem;
   color: var(--text-secondary);
   margin-bottom: 2.5rem;
-  backdrop-filter: blur(10px);
 }
 
 .hero-badge-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--accent-cyan);
-  box-shadow: 0 0 8px var(--accent-cyan);
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.8); }
+  background: #22c55e;
 }
 
 .hero h1 {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(3rem, 7vw, 5.5rem);
-  font-weight: 400;
+  font-weight: 700;
   line-height: 1.05;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   margin-bottom: 1.75rem;
+  color: var(--text-primary);
 }
 
 .hero h1 em {
-  font-style: italic;
-  background: linear-gradient(135deg, var(--accent-coral), var(--accent-amber));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-style: normal;
+  color: var(--accent-primary);
 }
 
 .hero-sub {
@@ -324,7 +266,7 @@ nav.scrolled {
   line-height: 1.7;
   max-width: 620px;
   margin: 0 auto 3rem;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .hero-actions {
@@ -340,20 +282,18 @@ nav.scrolled {
   gap: 0.6rem;
   padding: 0.85rem 2rem;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent-coral), #e85d3a);
+  background: var(--accent-primary);
   color: #fff;
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 0.95rem;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 24px rgba(255, 107, 74, 0.25);
+  transition: background 0.2s ease;
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(255, 107, 74, 0.35);
+  background: var(--accent-hover);
 }
 
 .btn-secondary {
@@ -362,21 +302,19 @@ nav.scrolled {
   gap: 0.6rem;
   padding: 0.85rem 2rem;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-glow);
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
   color: var(--text-primary);
   font-family: var(--font-body);
   font-weight: 500;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
+  background: var(--bg-surface);
+  border-color: var(--border-glow);
 }
 
 /* ─── VIDEO ─── */
@@ -389,35 +327,20 @@ nav.scrolled {
   position: relative;
   max-width: 960px;
   margin: 0 auto;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
   background: #0a0e17;
   border: 1px solid var(--border-subtle);
-  box-shadow:
-    0 40px 120px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.03),
-    0 0 80px rgba(255, 107, 74, 0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
-.video-wrapper::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 16px;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(255, 107, 74, 0.2), transparent 40%, transparent 60%, rgba(167, 139, 250, 0.2));
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  -webkit-mask-composite: xor;
-  pointer-events: none;
-  z-index: 2;
-}
+.video-wrapper::before { display: none; }
 
 .video-wrapper video {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 16px;
+  border-radius: 12px;
 }
 
 .video-badge {
@@ -426,26 +349,26 @@ nav.scrolled {
   gap: 0.5rem;
   padding: 0.4rem 1rem;
   border-radius: 100px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-glow);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--text-secondary);
   margin-bottom: 2rem;
-  backdrop-filter: blur(10px);
 }
 
 .video-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(1.6rem, 3vw, 2.4rem);
-  font-weight: 400;
+  font-weight: 700;
   margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
 }
 
 .video-subtitle {
   font-size: 1rem;
   color: var(--text-secondary);
-  font-weight: 300;
+  font-weight: 400;
   margin-bottom: 2.5rem;
   max-width: 500px;
   margin-left: auto;
@@ -466,7 +389,7 @@ section {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--accent-coral);
+  color: var(--accent-primary);
   margin-bottom: 1rem;
 }
 
@@ -474,15 +397,16 @@ section {
   content: '';
   width: 20px;
   height: 1px;
-  background: var(--accent-coral);
+  background: var(--accent-primary);
 }
 
 .section-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(2rem, 4vw, 3.2rem);
-  font-weight: 400;
+  font-weight: 700;
   line-height: 1.15;
   margin-bottom: 1.25rem;
+  letter-spacing: -0.02em;
 }
 
 .section-desc {
@@ -490,7 +414,7 @@ section {
   color: var(--text-secondary);
   max-width: 550px;
   line-height: 1.7;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .container {
@@ -508,51 +432,23 @@ section {
 
 .plugin-card {
   position: relative;
-  border-radius: 16px;
+  border-radius: 12px;
   padding: 2.5rem;
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  backdrop-filter: blur(20px);
   overflow: hidden;
-  transition: all 0.4s ease;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
-.plugin-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 16px;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent, rgba(255,255,255,0.03));
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  -webkit-mask-composite: xor;
-  pointer-events: none;
-}
+.plugin-card::before { display: none; }
 
 .plugin-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border-color: var(--border-glow);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.plugin-card-glow {
-  position: absolute;
-  width: 250px;
-  height: 250px;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.12;
-  top: -50px;
-  right: -50px;
-  pointer-events: none;
-  transition: opacity 0.4s;
-}
-
-.plugin-card:hover .plugin-card-glow { opacity: 0.2; }
-
-.plugin-card.moodle .plugin-card-glow { background: var(--moodle-orange); }
-.plugin-card.kahoot .plugin-card-glow { background: var(--kahoot-purple); }
+.plugin-card-glow { display: none; }
 
 .plugin-icon {
   width: 56px;
@@ -566,20 +462,21 @@ section {
 }
 
 .moodle .plugin-icon {
-  background: rgba(240, 147, 43, 0.12);
-  border: 1px solid rgba(240, 147, 43, 0.2);
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
   color: var(--moodle-orange);
 }
 
 .kahoot .plugin-icon {
-  background: rgba(134, 76, 191, 0.12);
-  border: 1px solid rgba(134, 76, 191, 0.2);
+  background: #f5f3ff;
+  border: 1px solid #ddd6fe;
   color: var(--kahoot-purple);
 }
 
 .plugin-card h3 {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 1.75rem;
+  font-weight: 700;
   margin-bottom: 0.75rem;
 }
 
@@ -587,7 +484,7 @@ section {
   color: var(--text-secondary);
   line-height: 1.7;
   margin-bottom: 2rem;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .plugin-features {
@@ -629,12 +526,13 @@ section {
 }
 
 .step-number {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 4rem;
-  color: rgba(255, 255, 255, 0.04);
+  color: rgba(0, 0, 0, 0.04);
   line-height: 1;
   margin-bottom: 1.25rem;
   position: relative;
+  font-weight: 700;
 }
 
 .step-number::after {
@@ -643,10 +541,7 @@ section {
   top: 0;
   left: 0;
   font-size: 1.5rem;
-  background: linear-gradient(135deg, var(--accent-coral), var(--accent-amber));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--accent-primary);
 }
 
 .step h3 {
@@ -660,14 +555,14 @@ section {
   color: var(--text-secondary);
   font-size: 0.9rem;
   line-height: 1.7;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .step-code {
   margin-top: 1.25rem;
   padding: 1rem 1.25rem;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   font-family: var(--font-mono);
   font-size: 0.78rem;
@@ -676,9 +571,11 @@ section {
   overflow-x: auto;
 }
 
-.step-code .cmd { color: var(--accent-cyan); }
-.step-code .arg { color: var(--accent-amber); }
+.step-code .cmd { color: var(--accent-primary); }
+.step-code .arg { color: #7c3aed; }
 .step-code .comment { color: var(--text-muted); }
+.step-code .string { color: #059669; }
+.step-code code { font-family: var(--font-mono); background: rgba(0,0,0,0.04); padding: 0.1em 0.3em; border-radius: 3px; font-size: 0.9em; }
 
 /* ─── TERMINAL ─── */
 .terminal-section { padding-bottom: 4rem; }
@@ -686,11 +583,11 @@ section {
 .terminal-window {
   max-width: 800px;
   margin: 4rem auto 0;
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
-  background: #0a0e17;
-  border: 1px solid var(--border-subtle);
-  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+  background: #1e1e2e;
+  border: 1px solid #2e2e3e;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
 .terminal-header {
@@ -699,7 +596,7 @@ section {
   align-items: center;
   gap: 0.5rem;
   background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid #2e2e3e;
 }
 
 .terminal-dot {
@@ -716,7 +613,7 @@ section {
   flex: 1;
   text-align: center;
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: #64748b;
   font-family: var(--font-mono);
 }
 
@@ -728,12 +625,12 @@ section {
   overflow-x: auto;
 }
 
-.terminal-body .prompt { color: var(--accent-cyan); }
-.terminal-body .command { color: var(--text-primary); }
-.terminal-body .output { color: var(--text-muted); }
-.terminal-body .success { color: var(--accent-cyan); }
-.terminal-body .flag { color: var(--accent-amber); }
-.terminal-body .string { color: var(--accent-coral); }
+.terminal-body .prompt { color: #22c55e; }
+.terminal-body .command { color: #e2e8f0; }
+.terminal-body .output { color: #94a3b8; }
+.terminal-body .success { color: #22c55e; }
+.terminal-body .flag { color: #fbbf24; }
+.terminal-body .string { color: #fb923c; }
 
 /* ─── COMPATIBILITY ─── */
 .compat-section {
@@ -751,32 +648,21 @@ section {
 .compat-card {
   width: 170px;
   padding: 2rem 1.5rem;
-  border-radius: 14px;
+  border-radius: 12px;
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  backdrop-filter: blur(10px);
   text-align: center;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
-.compat-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 14px;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(255,255,255,0.06), transparent);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  -webkit-mask-composite: xor;
-  pointer-events: none;
-}
+.compat-card::before { display: none; }
 
 .compat-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--border-glow);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .compat-icon {
@@ -788,7 +674,7 @@ section {
   align-items: center;
   justify-content: center;
   font-size: 1.4rem;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
 }
 
@@ -807,8 +693,8 @@ section {
 .arch-diagram {
   margin-top: 4rem;
   padding: 2.5rem;
-  border-radius: 16px;
-  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   max-width: 860px;
 }
@@ -855,27 +741,34 @@ section {
 }
 
 .arch-box.ai-tool {
-  background: rgba(96, 165, 250, 0.08);
-  border: 1px solid rgba(96, 165, 250, 0.2);
-  color: var(--accent-blue);
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  min-width: 90px;
 }
 
 .arch-box.instruction {
-  background: rgba(167, 139, 250, 0.08);
-  border: 1px solid rgba(167, 139, 250, 0.2);
-  color: var(--accent-violet);
+  background: #f5f3ff;
+  border: 1px solid #ddd6fe;
+  color: #6d28d9;
 }
 
 .arch-box.cli {
-  background: rgba(255, 107, 74, 0.08);
-  border: 1px solid rgba(255, 107, 74, 0.2);
-  color: var(--accent-coral);
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #c2410c;
+}
+
+.arch-box.mcp {
+  background: #f5f3ff;
+  border: 1px solid #ddd6fe;
+  color: #6d28d9;
 }
 
 .arch-box.api {
-  background: rgba(79, 209, 197, 0.08);
-  border: 1px solid rgba(79, 209, 197, 0.2);
-  color: var(--accent-cyan);
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #047857;
 }
 
 .arch-connector {
@@ -891,7 +784,7 @@ section {
 }
 
 .arch-connector line {
-  stroke: rgba(255, 255, 255, 0.1);
+  stroke: #d1d5db;
   stroke-width: 2;
   stroke-dasharray: 4 4;
 }
@@ -913,13 +806,13 @@ section {
   border: 1px solid var(--border-subtle);
   text-align: center;
   min-width: 180px;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .safety-step:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--border-glow);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .safety-step-icon {
@@ -945,7 +838,7 @@ section {
 
 /* ─── GRADING FEATURE ─── */
 .grading-section {
-  background: linear-gradient(180deg, transparent 0%, rgba(255, 107, 74, 0.02) 50%, transparent 100%);
+  background: transparent;
 }
 
 .grading-content {
@@ -962,8 +855,8 @@ section {
 
 .grading-card {
   padding: 2rem;
-  border-radius: 14px;
-  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
 }
 
@@ -980,7 +873,7 @@ section {
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: rgba(255, 107, 74, 0.1);
+  background: #eff6ff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -990,7 +883,7 @@ section {
 .grading-card-header span {
   font-family: var(--font-mono);
   font-size: 0.8rem;
-  color: var(--accent-coral);
+  color: var(--accent-primary);
 }
 
 .grading-step-list {
@@ -1013,36 +906,34 @@ section {
   width: 24px;
   height: 24px;
   border-radius: 6px;
-  background: rgba(255, 107, 74, 0.1);
-  border: 1px solid rgba(255, 107, 74, 0.2);
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  color: var(--accent-coral);
+  color: var(--accent-primary);
   flex-shrink: 0;
   margin-top: 2px;
 }
 
 .grading-text h3 {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 2.2rem;
+  font-weight: 700;
   margin-bottom: 1rem;
 }
 
 .grading-text h3 em {
-  font-style: italic;
-  background: linear-gradient(135deg, var(--accent-coral), var(--accent-amber));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-style: normal;
+  color: var(--accent-primary);
 }
 
 .grading-text p {
   color: var(--text-secondary);
   line-height: 1.7;
-  font-weight: 300;
+  font-weight: 400;
   margin-bottom: 1.5rem;
 }
 
@@ -1056,12 +947,10 @@ section {
 }
 
 .grading-stat .num {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 2rem;
-  background: linear-gradient(135deg, var(--accent-coral), var(--accent-amber));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-weight: 700;
+  color: var(--accent-primary);
 }
 
 .grading-stat .label {
@@ -1081,45 +970,22 @@ section {
   max-width: 700px;
   margin: 0 auto;
   padding: 4rem 3rem;
-  border-radius: 20px;
-  background: var(--bg-card);
+  border-radius: 16px;
+  background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  backdrop-filter: blur(20px);
   overflow: hidden;
 }
 
-.cta-box::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(255, 107, 74, 0.15), transparent 50%, rgba(167, 139, 250, 0.15));
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  -webkit-mask-composite: xor;
-  pointer-events: none;
-}
-
-.cta-glow {
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--accent-coral), transparent 70%);
-  filter: blur(80px);
-  opacity: 0.08;
-  top: -100px;
-  left: 50%;
-  transform: translateX(-50%);
-  pointer-events: none;
-}
+.cta-box::before { display: none; }
+.cta-glow { display: none; }
 
 .cta-box h2 {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 700;
   margin-bottom: 1rem;
   position: relative;
+  letter-spacing: -0.02em;
 }
 
 .cta-box p {
@@ -1127,7 +993,7 @@ section {
   max-width: 450px;
   margin: 0 auto 2rem;
   line-height: 1.7;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .cta-actions {
@@ -1170,13 +1036,13 @@ footer {
   width: 24px;
   height: 24px;
   border-radius: 6px;
-  background: linear-gradient(135deg, var(--accent-coral), var(--accent-amber));
+  background: var(--accent-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.65rem;
   font-weight: 700;
-  color: var(--bg-deep);
+  color: #ffffff;
 }
 
 .footer-links {
@@ -1188,10 +1054,10 @@ footer {
 .footer-links a {
   font-size: 0.82rem;
   color: var(--text-muted);
-  transition: color 0.3s;
+  transition: color 0.2s;
 }
 
-.footer-links a:hover { color: var(--text-secondary); }
+.footer-links a:hover { color: var(--text-primary); }
 
 .footer-right {
   font-size: 0.8rem;
@@ -1201,8 +1067,8 @@ footer {
 /* ─── ANIMATIONS ─── */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
 [data-reveal].visible {
@@ -1215,13 +1081,64 @@ footer {
 [data-reveal-delay="3"] { transition-delay: 0.3s; }
 [data-reveal-delay="4"] { transition-delay: 0.4s; }
 [data-reveal-delay="5"] { transition-delay: 0.5s; }
+[data-reveal-delay="6"] { transition-delay: 0.6s; }
+
+/* ─── INSTALL TABS ─── */
+.install-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+.install-tab {
+  padding: 0.5rem 1.25rem;
+  border-radius: 100px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.install-tab:hover {
+  border-color: var(--border-glow);
+  color: var(--text-primary);
+}
+
+.install-tab.active {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: #ffffff;
+}
+
+.install-panel {
+  display: none;
+  margin-top: 3rem;
+}
+
+.install-panel.active {
+  display: block;
+}
+
+.install-panel .steps {
+  margin-top: 0;
+}
+
+.compat-card[data-tool] {
+  cursor: pointer;
+}
 
 /* ─── RESPONSIVE ─── */
 
 /* Tablet landscape & below */
 @media (max-width: 1024px) {
   .grading-content { gap: 2.5rem; }
-  .arch-box { min-width: 100px; font-size: 0.72rem; padding: 0.6rem 0.75rem; }
+  .arch-box { min-width: 80px; font-size: 0.72rem; padding: 0.6rem 0.75rem; }
 }
 
 /* Tablet portrait & below */
@@ -1352,7 +1269,7 @@ footer {
 <section class="video-section" id="demo">
   <div class="container" style="text-align:center;">
     <div class="video-badge" data-reveal>
-      <svg width="14" height="14" fill="none" stroke="var(--accent-coral)" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <svg width="14" height="14" fill="none" stroke="var(--accent-primary)" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       See it in action
     </div>
     <h2 class="video-title" data-reveal data-reveal-delay="1">From CLI to classroom in seconds</h2>
@@ -1412,39 +1329,250 @@ footer {
 <section id="install">
   <div class="container">
     <div class="section-label" data-reveal>Get Started</div>
-    <h2 class="section-title" data-reveal data-reveal-delay="1">Three commands to get going</h2>
-    <p class="section-desc" data-reveal data-reveal-delay="2">Install from the Claude Code plugin marketplace in seconds.</p>
+    <h2 class="section-title" data-reveal data-reveal-delay="1">Set up in seconds</h2>
+    <p class="section-desc" data-reveal data-reveal-delay="2">Pick your AI tool and follow the steps.</p>
 
-    <div class="steps">
-      <div class="step" data-reveal data-reveal-delay="1">
-        <div class="step-number" data-num="01">01</div>
-        <h3>Add the marketplace</h3>
-        <p>Register the edu-plugins marketplace to access both skills.</p>
-        <div class="step-code">
-          <span class="cmd">/plugin</span> <span class="arg">marketplace add</span> rudini/claude-edu-plugins
+    <div class="install-tabs" data-reveal data-reveal-delay="3">
+      <button class="install-tab active" data-target="claude-code">Claude Code</button>
+      <button class="install-tab" data-target="copilot">Copilot</button>
+      <button class="install-tab" data-target="codex">Codex</button>
+      <button class="install-tab" data-target="cursor">Cursor</button>
+      <button class="install-tab" data-target="windsurf">Windsurf</button>
+      <button class="install-tab" data-target="gemini">Gemini CLI</button>
+    </div>
+
+    <!-- Claude Code -->
+    <div class="install-panel active" id="panel-claude-code">
+      <div class="steps">
+        <div class="step">
+          <div class="step-number" data-num="01">01</div>
+          <h3>Add the marketplace</h3>
+          <p>Register the edu-plugins marketplace.</p>
+          <div class="step-code">
+            <span class="cmd">/plugin</span> <span class="arg">marketplace add</span> rudini/claude-edu-plugins
+          </div>
         </div>
-      </div>
-
-      <div class="step" data-reveal data-reveal-delay="2">
-        <div class="step-number" data-num="02">02</div>
-        <h3>Install the plugins</h3>
-        <p>Pick the skills you need &mdash; Moodle, Kahoot, or both.</p>
-        <div class="step-code">
-          <span class="cmd">/plugin</span> <span class="arg">install</span> moodle-skill@claude-edu-plugins<br>
-          <span class="cmd">/plugin</span> <span class="arg">install</span> kahoot-skill@claude-edu-plugins
+        <div class="step">
+          <div class="step-number" data-num="02">02</div>
+          <h3>Install the plugins</h3>
+          <p>Pick the skills you need &mdash; Moodle, Kahoot, or both.</p>
+          <div class="step-code">
+            <span class="cmd">/plugin</span> <span class="arg">install</span> moodle-skill@claude-edu-plugins<br>
+            <span class="cmd">/plugin</span> <span class="arg">install</span> kahoot-skill@claude-edu-plugins
+          </div>
         </div>
-      </div>
-
-      <div class="step" data-reveal data-reveal-delay="3">
-        <div class="step-number" data-num="03">03</div>
-        <h3>Configure &amp; teach</h3>
-        <p>Set your Moodle URL and course ID, then start managing your course.</p>
-        <div class="step-code">
-          <span class="cmd">/moodle-skill:moodle</span> <span class="arg">login</span><br>
-          <span class="cmd">/moodle-skill:moodle</span> <span class="arg">structure</span>
+        <div class="step">
+          <div class="step-number" data-num="03">03</div>
+          <h3>Configure &amp; teach</h3>
+          <p>Log in and start managing your course.</p>
+          <div class="step-code">
+            <span class="cmd">/moodle-skill:moodle</span> <span class="arg">login</span><br>
+            <span class="cmd">/moodle-skill:moodle</span> <span class="arg">structure</span>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Copilot -->
+    <div class="install-panel" id="panel-copilot">
+      <div class="steps">
+        <div class="step">
+          <div class="step-number" data-num="01">01</div>
+          <h3>Clone &amp; install</h3>
+          <p>Get the repo and install dependencies.</p>
+          <div class="step-code">
+            <span class="cmd">git clone</span> https://github.com/rudini/claude-edu-plugins.git<br>
+            <span class="cmd">cd</span> plugins/moodle-skill <span class="arg">&amp;&amp;</span> <span class="cmd">npm install</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number" data-num="02">02</div>
+          <h3>Add MCP server</h3>
+          <p>Create <code>.vscode/mcp.json</code> in your project.</p>
+          <div class="step-code">
+            {<br>
+            &nbsp;&nbsp;<span class="string">"servers"</span>: {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"edu-plugins"</span>: {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"command"</span>: <span class="string">"node"</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"args"</span>: [<span class="string">"path/to/mcp-edu-server.js"</span>]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;}<br>
+            }
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number" data-num="03">03</div>
+          <h3>Start using</h3>
+          <p>Copilot can now call Moodle &amp; Kahoot tools directly.</p>
+          <div class="step-code">
+            <span class="comment"># In Copilot Chat:</span><br>
+            Show my Moodle course structure<br>
+            Create a Kahoot quiz about JavaScript
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Codex -->
+    <div class="install-panel" id="panel-codex">
+      <div class="steps">
+        <div class="step">
+          <div class="step-number" data-num="01">01</div>
+          <h3>Clone &amp; install</h3>
+          <p>Get the repo and install dependencies.</p>
+          <div class="step-code">
+            <span class="cmd">git clone</span> https://github.com/rudini/claude-edu-plugins.git<br>
+            <span class="cmd">cd</span> plugins/mcp-server <span class="arg">&amp;&amp;</span> <span class="cmd">npm install</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number" data-num="02">02</div>
+          <h3>Add MCP server</h3>
+          <p>Create <code>.codex/mcp.json</code> in your project.</p>
+          <div class="step-code">
+            {<br>
+            &nbsp;&nbsp;<span class="string">"servers"</span>: {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"edu-plugins"</span>: {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"command"</span>: <span class="string">"node"</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"args"</span>: [<span class="string">"path/to/mcp-edu-server.js"</span>]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;}<br>
+            }
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number" data-num="03">03</div>
+          <h3>Start using</h3>
+          <p>Codex can now call all Moodle &amp; Kahoot tools.</p>
+          <div class="step-code">
+            <span class="comment"># In Codex:</span><br>
+            Show my Moodle course structure<br>
+            Create a Kahoot quiz about Python
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cursor -->
+    <div class="install-panel" id="panel-cursor">
+      <div class="steps">
+        <div class="step">
+          <div class="step-number" data-num="01">01</div>
+          <h3>Clone &amp; install</h3>
+          <p>Get the repo and install dependencies.</p>
+          <div class="step-code">
+            <span class="cmd">git clone</span> https://github.com/rudini/claude-edu-plugins.git<br>
+            <span class="cmd">cd</span> plugins/mcp-server <span class="arg">&amp;&amp;</span> <span class="cmd">npm install</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number" data-num="02">02</div>
+          <h3>Add MCP server</h3>
+          <p>Go to <strong>Settings &gt; MCP</strong> and add the server.</p>
+          <div class="step-code">
+            {<br>
+            &nbsp;&nbsp;<span class="string">"mcpServers"</span>: {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"edu-plugins"</span>: {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"command"</span>: <span class="string">"node"</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"args"</span>: [<span class="string">"path/to/mcp-edu-server.js"</span>]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;}<br>
+            }
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number" data-num="03">03</div>
+          <h3>Start using</h3>
+          <p>Cursor calls Moodle &amp; Kahoot tools via MCP.</p>
+          <div class="step-code">
+            <span class="comment"># In Cursor chat:</span><br>
+            Show my Moodle course structure<br>
+            Create a Kahoot quiz about React
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Windsurf -->
+    <div class="install-panel" id="panel-windsurf">
+      <div class="steps">
+        <div class="step">
+          <div class="step-number" data-num="01">01</div>
+          <h3>Clone &amp; install</h3>
+          <p>Get the repo and install dependencies.</p>
+          <div class="step-code">
+            <span class="cmd">git clone</span> https://github.com/rudini/claude-edu-plugins.git<br>
+            <span class="cmd">cd</span> plugins/mcp-server <span class="arg">&amp;&amp;</span> <span class="cmd">npm install</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number" data-num="02">02</div>
+          <h3>Add MCP server</h3>
+          <p>Go to <strong>Settings &gt; MCP</strong> and add the server.</p>
+          <div class="step-code">
+            {<br>
+            &nbsp;&nbsp;<span class="string">"mcpServers"</span>: {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"edu-plugins"</span>: {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"command"</span>: <span class="string">"node"</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"args"</span>: [<span class="string">"path/to/mcp-edu-server.js"</span>]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;}<br>
+            }
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number" data-num="03">03</div>
+          <h3>Start using</h3>
+          <p>Windsurf calls Moodle &amp; Kahoot tools via MCP.</p>
+          <div class="step-code">
+            <span class="comment"># In Windsurf:</span><br>
+            Show my Moodle course structure<br>
+            Create a Kahoot quiz about CSS
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gemini CLI -->
+    <div class="install-panel" id="panel-gemini">
+      <div class="steps">
+        <div class="step">
+          <div class="step-number" data-num="01">01</div>
+          <h3>Clone &amp; install</h3>
+          <p>Get the repo and install dependencies.</p>
+          <div class="step-code">
+            <span class="cmd">git clone</span> https://github.com/rudini/claude-edu-plugins.git<br>
+            <span class="cmd">cd</span> plugins/mcp-server <span class="arg">&amp;&amp;</span> <span class="cmd">npm install</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number" data-num="02">02</div>
+          <h3>Add MCP server</h3>
+          <p>Add to <code>~/.gemini/settings.json</code>.</p>
+          <div class="step-code">
+            {<br>
+            &nbsp;&nbsp;<span class="string">"mcpServers"</span>: {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"edu-plugins"</span>: {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"command"</span>: <span class="string">"node"</span>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"args"</span>: [<span class="string">"path/to/mcp-edu-server.js"</span>]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;}<br>
+            }
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number" data-num="03">03</div>
+          <h3>Start using</h3>
+          <p>Gemini CLI calls Moodle &amp; Kahoot tools via MCP.</p>
+          <div class="step-code">
+            <span class="comment"># In Gemini CLI:</span><br>
+            Show my Moodle course structure<br>
+            Create a Kahoot quiz about TypeScript
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1490,44 +1618,52 @@ footer {
     <p class="section-desc" data-reveal data-reveal-delay="2" style="margin-left:auto;margin-right:auto;">Not just Claude Code. The underlying CLI scripts work with any AI tool that can execute shell commands.</p>
 
     <div class="compat-grid">
-      <div class="compat-card" data-reveal data-reveal-delay="1">
-        <div class="compat-icon" style="color: var(--accent-coral);">
+      <div class="compat-card" data-reveal data-reveal-delay="1" data-tool="claude-code">
+        <div class="compat-icon" style="color: var(--accent-primary);">
           <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M21.624 7.2L12.372.6a.75.75 0 00-.744 0L2.376 7.2a.75.75 0 00-.376.65v8.3a.75.75 0 00.376.65l9.252 6.6a.75.75 0 00.744 0l9.252-6.6a.75.75 0 00.376-.65v-8.3a.75.75 0 00-.376-.65z"/></svg>
         </div>
         <h4>Claude Code</h4>
         <span>Native plugin</span>
       </div>
 
-      <div class="compat-card" data-reveal data-reveal-delay="2">
+      <div class="compat-card" data-reveal data-reveal-delay="2" data-tool="copilot">
         <div class="compat-icon" style="color: var(--accent-blue);">
           <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
         </div>
         <h4>Copilot</h4>
-        <span>Instructions file</span>
+        <span>MCP Server</span>
       </div>
 
-      <div class="compat-card" data-reveal data-reveal-delay="3">
+      <div class="compat-card" data-reveal data-reveal-delay="3" data-tool="codex">
         <div class="compat-icon" style="color: var(--accent-cyan);">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg>
         </div>
         <h4>Codex</h4>
-        <span>AGENTS.md</span>
+        <span>MCP Server</span>
       </div>
 
-      <div class="compat-card" data-reveal data-reveal-delay="4">
+      <div class="compat-card" data-reveal data-reveal-delay="4" data-tool="cursor">
         <div class="compat-icon" style="color: var(--accent-violet);">
           <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13.325 3.05L8.667 20.432l1.932.518 4.658-17.382-1.932-.518zM7.612 18.36l1.36-1.448L4.14 12l4.831-4.912-1.36-1.448L1 12l6.612 6.36zM16.388 5.64l-1.36 1.448L19.86 12l-4.831 4.912 1.36 1.448L23 12l-6.612-6.36z"/></svg>
         </div>
         <h4>Cursor</h4>
-        <span>Rules + MCP</span>
+        <span>MCP Server</span>
       </div>
 
-      <div class="compat-card" data-reveal data-reveal-delay="5">
-        <div class="compat-icon" style="color: var(--accent-amber);">
+      <div class="compat-card" data-reveal data-reveal-delay="5" data-tool="windsurf">
+        <div class="compat-icon" style="color: #ca8a04;">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
         </div>
         <h4>Windsurf</h4>
-        <span>AI Rules</span>
+        <span>MCP Server</span>
+      </div>
+
+      <div class="compat-card" data-reveal data-reveal-delay="6" data-tool="gemini">
+        <div class="compat-icon" style="color: #4285f4;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="#4285f4"/><path d="M2 17l10 5 10-5" stroke="#4285f4" stroke-width="2" fill="none"/><path d="M2 12l10 5 10-5" stroke="#4285f4" stroke-width="2" fill="none"/></svg>
+        </div>
+        <h4>Gemini CLI</h4>
+        <span>MCP Server</span>
       </div>
     </div>
   </div>
@@ -1538,18 +1674,19 @@ footer {
   <div class="container">
     <div class="section-label" data-reveal>Architecture</div>
     <h2 class="section-title" data-reveal data-reveal-delay="1">Simple, modular design</h2>
-    <p class="section-desc" data-reveal data-reveal-delay="2">The AI tool talks to CLI scripts, which talk to APIs. Swap any layer.</p>
+    <p class="section-desc" data-reveal data-reveal-delay="2">Any AI tool connects via MCP or CLI. The MCP server wraps all commands as structured tools.</p>
 
     <div class="arch-diagram" data-reveal data-reveal-delay="3">
       <div class="arch-layers">
         <div class="arch-layer">
-          <div class="arch-layer-label">AI Layer</div>
+          <div class="arch-layer-label">AI Agents</div>
           <div class="arch-layer-content">
             <div class="arch-box ai-tool">Claude Code</div>
             <div class="arch-box ai-tool">Copilot</div>
             <div class="arch-box ai-tool">Codex</div>
             <div class="arch-box ai-tool">Cursor</div>
             <div class="arch-box ai-tool">Windsurf</div>
+            <div class="arch-box ai-tool">Gemini CLI</div>
           </div>
         </div>
 
@@ -1558,12 +1695,9 @@ footer {
         </div>
 
         <div class="arch-layer">
-          <div class="arch-layer-label">Instructions</div>
+          <div class="arch-layer-label">MCP Server</div>
           <div class="arch-layer-content">
-            <div class="arch-box instruction">SKILL.md</div>
-            <div class="arch-box instruction">copilot-instructions.md</div>
-            <div class="arch-box instruction">AGENTS.md</div>
-            <div class="arch-box instruction">.cursor/rules</div>
+            <div class="arch-box mcp">mcp-edu-server.js &mdash; 31 structured tools</div>
           </div>
         </div>
 
@@ -1606,7 +1740,7 @@ footer {
     <div class="safety-flow" data-reveal data-reveal-delay="3">
       <div class="safety-step">
         <div class="safety-step-icon">
-          <svg width="32" height="32" fill="none" stroke="var(--accent-amber)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+          <svg width="32" height="32" fill="none" stroke="var(--accent-primary)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
         </div>
         <h4>Dry Run</h4>
         <p>Preview all changes<br>before they happen</p>
@@ -1616,7 +1750,7 @@ footer {
 
       <div class="safety-step">
         <div class="safety-step-icon">
-          <svg width="32" height="32" fill="none" stroke="var(--accent-violet)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <svg width="32" height="32" fill="none" stroke="var(--accent-primary)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
         <h4>Confirm</h4>
         <p>Review output and<br>approve the changes</p>
@@ -1626,10 +1760,10 @@ footer {
 
       <div class="safety-step">
         <div class="safety-step-icon">
-          <svg width="32" height="32" fill="none" stroke="var(--accent-cyan)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          <svg width="32" height="32" fill="none" stroke="var(--accent-primary)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
         </div>
         <h4>Go Live</h4>
-        <p>Execute with the<br><code style="color:var(--accent-amber);font-family:var(--font-mono);font-size:0.75rem;">--live</code> flag</p>
+        <p>Execute with the<br><code style="color:var(--accent-primary);font-family:var(--font-mono);font-size:0.75rem;">--live</code> flag</p>
       </div>
     </div>
   </div>
@@ -1659,7 +1793,7 @@ footer {
         <div class="grading-card">
           <div class="grading-card-header">
             <div class="grading-card-icon">
-              <svg width="16" height="16" fill="none" stroke="var(--accent-coral)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              <svg width="16" height="16" fill="none" stroke="var(--accent-primary)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
             </div>
             <span>grading pipeline</span>
           </div>
@@ -1682,7 +1816,7 @@ footer {
             </li>
             <li>
               <span class="grading-step-num">5</span>
-              <span>Submit approved grades back to Moodle with <code style="color:var(--accent-amber);font-family:var(--font-mono);font-size:0.78rem;">--live</code></span>
+              <span>Submit approved grades back to Moodle with <code style="color:var(--accent-primary);font-family:var(--font-mono);font-size:0.78rem;">--live</code></span>
             </li>
           </ol>
         </div>
@@ -1790,6 +1924,24 @@ function animateTerminal() {
     }, i * 80);
   });
 }
+
+// Install tabs
+function switchTab(toolId) {
+  document.querySelectorAll('.install-tab').forEach(t => t.classList.toggle('active', t.dataset.target === toolId));
+  document.querySelectorAll('.install-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + toolId));
+}
+
+document.querySelectorAll('.install-tab').forEach(tab => {
+  tab.addEventListener('click', () => switchTab(tab.dataset.target));
+});
+
+// Compat card click → scroll to install + switch tab
+document.querySelectorAll('.compat-card[data-tool]').forEach(card => {
+  card.addEventListener('click', () => {
+    switchTab(card.dataset.tool);
+    document.getElementById('install').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
 
 // Parallax orbs on mouse move
 document.addEventListener('mousemove', (e) => {

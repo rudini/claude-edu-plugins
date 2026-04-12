@@ -60,7 +60,7 @@ export const GamePlayScene: React.FC = () => {
         justifyContent: "center",
         alignItems: "center",
         opacity: fadeIn * fadeOut,
-        background: "#46178f",
+        background: "#7c3aed",
       }}
     >
       {/* Question number */}
@@ -69,10 +69,10 @@ export const GamePlayScene: React.FC = () => {
           position: "absolute",
           top: 40,
           left: 60,
-          fontFamily: "system-ui, sans-serif",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 18,
           fontWeight: 700,
-          color: "rgba(255,255,255,0.6)",
+          color: "rgba(255,255,255,0.7)",
         }}
       >
         {questionIndex + 1} of 10
@@ -87,14 +87,14 @@ export const GamePlayScene: React.FC = () => {
           width: 70,
           height: 70,
           borderRadius: "50%",
-          background: "rgba(255,255,255,0.1)",
+          background: "rgba(255,255,255,0.15)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontFamily: "system-ui, sans-serif",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 28,
           fontWeight: 800,
-          color: timer <= 5 ? "#e21b3c" : "#fff",
+          color: timer <= 5 ? "#fca5a5" : "#fff",
         }}
       >
         {timer}
@@ -109,9 +109,9 @@ export const GamePlayScene: React.FC = () => {
           transform: "translateX(-50%)",
           display: "flex",
           gap: 24,
-          fontFamily: "system-ui, sans-serif",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 14,
-          color: "rgba(255,255,255,0.5)",
+          color: "rgba(255,255,255,0.6)",
         }}
       >
         <span>MikeW_11: {1200 + questionIndex * 800}</span>
@@ -134,13 +134,13 @@ export const GamePlayScene: React.FC = () => {
             textAlign: "center",
             marginBottom: 50,
             padding: "40px 60px",
-            background: "rgba(0,0,0,0.3)",
-            borderRadius: 8,
+            background: "rgba(0,0,0,0.2)",
+            borderRadius: 12,
           }}
         >
           <h2
             style={{
-              fontFamily: "system-ui, sans-serif",
+              fontFamily: "'Inter', system-ui, sans-serif",
               fontSize: 38,
               fontWeight: 800,
               color: "#fff",
@@ -167,7 +167,6 @@ export const GamePlayScene: React.FC = () => {
             });
 
             const isCorrect = i === q.correct;
-            const isWrong = showAnswer && !isCorrect;
 
             let bg = choiceColors[i];
             let opacity = choiceOpacity;
@@ -185,7 +184,7 @@ export const GamePlayScene: React.FC = () => {
                 key={i}
                 style={{
                   padding: "22px 30px",
-                  borderRadius: 8,
+                  borderRadius: 10,
                   background: bg,
                   display: "flex",
                   alignItems: "center",
@@ -221,7 +220,7 @@ export const GamePlayScene: React.FC = () => {
                 </div>
                 <span
                   style={{
-                    fontFamily: "system-ui, sans-serif",
+                    fontFamily: "'Inter', system-ui, sans-serif",
                     fontSize: 22,
                     fontWeight: 700,
                     color: "#fff",
