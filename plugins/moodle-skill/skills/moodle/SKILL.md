@@ -16,7 +16,7 @@ Manage any Moodle course via the `moodle-updater.js` CLI. All destructive operat
 ## Prerequisites
 
 - **`.env`** in your project root with `MOODLE_URL`, `MOODLE_SESSION`, and `COURSE_ID`
-- **Dependencies**: Auto-installed on first session via hooks (jsdom, marked, playwright)
+- **Dependencies**: Auto-installed on first session via hooks (jsdom, marked, marked-highlight, highlight.js, turndown, playwright)
 - **Playwright browser**: Installed automatically on first `login` command
 
 ## Workflow
@@ -59,15 +59,17 @@ NODE_PATH="${CLAUDE_PLUGIN_DATA}/node_modules" node "${CLAUDE_PLUGIN_ROOT}/scrip
 | **Update** | `update-page` | `<moduleId> <htmlFile>` | Replace page content |
 | **Update** | `update-summary` | `<sectionId> <htmlFile>` | Replace section summary |
 | **CRUD** | `create-url` | `<sectionNum> <name> <url>` | Create URL activity |
-| **CRUD** | `create-page` | `<sectionNum> <name> <htmlFile>` | Create text page |
+| **CRUD** | `create-page` | `<sectionNum> <name> <htmlOrMdFile>` | Create text page (.md auto-converts) |
+| **CRUD** | `create-label` | `<sectionNum> <htmlOrMdFile>` | Create label (no name field; .md auto-converts) |
 | **CRUD** | `create-resource` | `<sectionNum> <name> <file>` | Upload file resource |
-| **CRUD** | `create-assign` | `<sectionNum> <name> <htmlFile> [--open ts] [--due ts]` | Create assignment |
-| **CRUD** | `create-forum` | `<sectionNum> <name> <htmlFile>` | Create forum |
+| **CRUD** | `create-assign` | `<sectionNum> <name> <htmlOrMdFile> [--open ts] [--due ts]` | Create assignment |
+| **CRUD** | `create-forum` | `<sectionNum> <name> <htmlOrMdFile>` | Create forum |
 | **CRUD** | `create-quiz` | `<sectionNum> <configJson>` | Create quiz (SEB, time limit) |
 | **Manage** | `delete-activity` | `<moduleId>` | Delete activity |
 | **Manage** | `hide-activity` | `<moduleId>` | Hide activity |
 | **Manage** | `indent-activity` | `<moduleId>` | Indent activity |
 | **Manage** | `move-activity` | `<moduleId> <afterModuleId>` | Move activity |
+| **Sections** | `add-section` | — | Append a new empty section at the end |
 | **Sections** | `delete-section` | `<sectionId>` | Delete section |
 | **Sections** | `duplicate-section` | — | Duplicate last section |
 | **Sections** | `move-section` | `<sectionId> <targetSectionId>` | Move section before target |
@@ -101,6 +103,51 @@ Read the JSON file, grade each student response against the criteria, and produc
 ```bash
 NODE_PATH="${CLAUDE_PLUGIN_DATA}/node_modules" node "${CLAUDE_PLUGIN_ROOT}/scripts/moodle-updater.js" grade-essay submit <cmid> --grades grades-result.json --live
 ```
+
+## Course Round-Trip Workflow (download → edit → re-upload)
+
+In addition to the `moodle-updater.js` CLI, the plugin ships standalone scripts to mirror a whole course locally, edit it, and append it to another course.
+
+### 1. Download a course
+
+Reads `MOODLE_URL` / `COURSE_ID` / `MOODLE_SESSION` from `.env` and writes a round-trip-friendly tree to `<outDir>` (default `./kurs`).
+
+```bash
+NODE_PATH="${CLAUDE_PLUGIN_DATA}/node_modules" node "${CLAUDE_PLUGIN_ROOT}/scripts/download-course.js" ./kurs
+```
+
+Layout produced:
+
+```
+kurs/
+  course.json, state.json, README.md
+  <NN>-<section-slug>/
+    section.json, summary.md
+    <MM>-<type>-<slug>/
+      activity.json
+      content.md            # page/label/assign/forum/quiz/attendance bodies
+      files/<originalname>  # for resource modules
+```
+
+### 2. Plan / preview the upload
+
+Walks the tree and prints the equivalent `moodle-updater.js` commands. No HTTP calls. Uses the *target* `MOODLE_URL` / `COURSE_ID` from `.env`.
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/scripts/upload-course.js" ./kurs
+```
+
+### 3. Execute the upload (append-only)
+
+Appends each source section as a NEW section at the end of the target course — existing sections are never touched. Per source section it runs `duplicate-section` → `rename-section` → `update-summary` → `create-<type>` for each activity.
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/scripts/execute-upload.js" ./kurs                       # dry run
+node "${CLAUDE_PLUGIN_ROOT}/scripts/execute-upload.js" ./kurs --section 01 --live   # only section 01, live
+node "${CLAUDE_PLUGIN_ROOT}/scripts/execute-upload.js" ./kurs --live                # all sections, live
+```
+
+`--live` is required to actually write to Moodle. Without it the script only prints the plan.
 
 ## Session Handling
 

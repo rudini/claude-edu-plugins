@@ -55,10 +55,27 @@ Use `--browser msedge` or `--browser chrome` if your org requires a specific bro
 | Update | `update-label`, `update-page`, `update-summary` | Modify content |
 | CRUD | `create-url`, `create-page`, `create-resource`, `create-assign`, `create-forum`, `create-quiz` | Create activities |
 | Manage | `delete-activity`, `hide-activity`, `indent-activity`, `move-activity` | Manage activities |
-| Sections | `delete-section`, `duplicate-section`, `move-section`, `rename-section` | Manage sections |
+| Sections | `add-section`, `delete-section`, `duplicate-section`, `move-section`, `rename-section` | Manage sections |
 | Quiz | `import-gift`, `add-questions-to-quiz`, `delete-quiz-questions` | Quiz management |
 | Grading | `grade-essay scrape`, `grade-essay submit` | AI essay grading |
 | Diagnostic | `dump-form`, `dump-grading` | Debug tools |
+
+### Course Round-Trip (download → edit → re-upload)
+
+In addition to the per-command CLI, the plugin ships standalone scripts to mirror a whole course locally and append it to another course:
+
+```bash
+# 1. Download the source course (uses MOODLE_URL / COURSE_ID from .env) into ./kurs
+node plugins/moodle-skill/scripts/download-course.js ./kurs
+
+# 2. Preview what would be uploaded to the target course (.env again)
+node plugins/moodle-skill/scripts/upload-course.js ./kurs
+
+# 3. Append each section as a NEW section to the target course
+node plugins/moodle-skill/scripts/execute-upload.js ./kurs --live
+```
+
+`execute-upload.js` is append-only — existing sections in the target course are never touched. Use `--section <NN>` to upload a single source section. See [SKILL.md](plugins/moodle-skill/skills/moodle/SKILL.md#course-round-trip-workflow-download--edit--re-upload) for the full layout.
 
 ## Kahoot Skill
 

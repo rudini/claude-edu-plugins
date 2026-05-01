@@ -2,11 +2,15 @@
   "name": "moodle-skill",
   "version": "1.0.0",
   "type": "module",
+  "scripts": {
+    "test": "node --test scripts/__tests__/*.test.js"
+  },
   "dependencies": {
     "highlight.js": "^11.11.1",
     "jsdom": "^25.0.0",
     "marked": "^17.0.3",
     "marked-highlight": "^2.2.3",
-    "playwright": "^1.52.0"
+    "playwright": "^1.52.0",
+    "turndown": "^7.2.4"
   }
 }

@@ -13,7 +13,7 @@ The Claude Edu Plugins ship as **Claude Code plugins**, but also include a ready
 │                    ▼                                        │
 │  ┌────────────────────────────────────────────────────┐    │
 │  │  MCP Server (mcp-edu-server.js)                    │    │
-│  │  31 structured tools — all Moodle & Kahoot commands │    │
+│  │  35 structured tools — all Moodle & Kahoot commands │    │
 │  └──────────────────┬─────────────────────────────────┘    │
 │                     │ spawns                                │
 │  ┌──────────────────▼─────────────────────────────────┐    │
@@ -170,7 +170,7 @@ This repository includes a ready-to-use MCP server at `plugins/mcp-server/mcp-ed
 
 ### Available MCP Tools
 
-The server exposes 31 tools:
+The server exposes 35 tools:
 
 | Tool | Description |
 |------|-------------|
@@ -188,6 +188,7 @@ The server exposes 31 tools:
 | `moodle_create_assign` | Create assignment |
 | `moodle_create_forum` | Create forum |
 | `moodle_create_quiz` | Create quiz from config |
+| `moodle_add_section` | Append a new empty section |
 | `moodle_duplicate_section` | Duplicate last section |
 | `moodle_rename_section` | Rename a section |
 | `moodle_move_section` | Move a section |
@@ -200,6 +201,9 @@ The server exposes 31 tools:
 | `moodle_delete_quiz_questions` | Delete quiz questions |
 | `moodle_add_questions_to_quiz` | Add questions to quiz |
 | `moodle_grade_essay` | AI-assisted essay grading |
+| `moodle_download_course` | Mirror course into local round-trip tree |
+| `moodle_upload_course_plan` | Print plan to re-upload tree to target course |
+| `moodle_execute_upload` | Append-only re-upload of tree to target course |
 | `kahoot_login` | Browser login to Kahoot |
 | `kahoot_list` | List quizzes |
 | `kahoot_preview` | Validate quiz JSON |

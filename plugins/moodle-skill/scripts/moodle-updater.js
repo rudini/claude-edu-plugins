@@ -334,7 +334,7 @@ async function showPage(moduleId) {
 // --- Update-Befehle ---
 
 async function updateModuleContent(label, id, htmlFile, live, { fetchFn, fieldSelector, submitUrl }) {
-  const neuerHtml = readFileSync(resolve(htmlFile), 'utf-8').trim();
+  const neuerHtml = loadHtmlOrMd(htmlFile);
 
   console.log(`\n${'='.repeat(60)}`);
   console.log(`${label}: ${id} ${live ? '(LIVE)' : '(DRY RUN)'}`);
@@ -387,6 +387,28 @@ function updateSummary(sectionId, htmlFile, live) {
 }
 
 // --- Strukturelle Befehle ---
+
+async function addSection(live) {
+  const state = await getCourseState();
+  const lastSection = state.section[state.section.length - 1];
+
+  console.log(`\n${'='.repeat(60)}`);
+  console.log(`Section anhängen ${live ? '(LIVE)' : '(DRY RUN)'}`);
+  console.log('='.repeat(60));
+  console.log(`Aktuell letzte Section: ${lastSection.number} (ID: ${lastSection.id})`);
+
+  if (!live) {
+    console.log('\nDRY RUN - nichts geaendert.');
+    return;
+  }
+
+  await courseFormatAction('section_add', [lastSection.id]);
+  invalidateCache();
+
+  const newState = await getCourseState();
+  const newSection = newState.section[newState.section.length - 1];
+  console.log(`\nNeue Section erstellt: ${newSection.number} (ID: ${newSection.id}): "${newSection.title}"`);
+}
 
 async function duplicateSection(live) {
   const state = await getCourseState();
@@ -519,6 +541,17 @@ function createAssign(sectionNum, name, introHtml, live, beforemod, dates) {
         setMoodleDateFields(formData, 'gradingduedate', dates.due + 7 * 24 * 60 * 60);
       }
     }
+  }, beforemod);
+}
+
+function createLabel(sectionNum, htmlContent, live, beforemod) {
+  // Labels haben kein eigenes Name-Feld — Moodle leitet den Anzeigetitel
+  // intern aus introeditor[text] ab. Wir generieren einen kurzen Fallback-Namen.
+  const text = htmlContent.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  const name = (text.slice(0, 60) || 'Label').trim();
+  return createModule('label', sectionNum, name, live, (_form, formData) => {
+    formData.set('introeditor[text]', htmlContent);
+    formData.set('introeditor[format]', '1');
   }, beforemod);
 }
 
@@ -1295,6 +1328,17 @@ function markdownFileToHtml(filePath) {
   return marked.parse(md);
 }
 
+/**
+ * Load HTML body from a .html or .md file.
+ * Markdown files are converted via markdownFileToHtml (full marked parser
+ * with syntax highlighting + inline styles for Moodle).
+ */
+function loadHtmlOrMd(filePath) {
+  const path = resolve(filePath);
+  if (/\.md$/i.test(path)) return markdownFileToHtml(path).trim();
+  return readFileSync(path, 'utf-8').trim();
+}
+
 /** Escape HTML special characters to prevent injection. */
 function escapeHtml(text) {
   return text
@@ -1459,19 +1503,20 @@ Read:
   show-label <moduleId>                      Show label HTML content
   show-page <moduleId>                       Show page HTML content
 
-Update:
-  update-label <moduleId> <htmlFile>         Replace label content
-  update-page <moduleId> <htmlFile>          Replace page content
-  update-summary <sectionId> <htmlFile>      Replace section summary
+Update (HTML or Markdown file — .md is auto-converted via marked):
+  update-label <moduleId> <file>             Replace label content
+  update-page <moduleId> <file>              Replace page content
+  update-summary <sectionId> <file>          Replace section summary
 
-Create:
+Create (HTML or Markdown file — .md is auto-converted via marked):
   create-url <sectionNum> <name> <url>       Create a URL resource
-  create-page <sectionNum> <name> <htmlFile> Create a page from HTML file
+  create-page <sectionNum> <name> <file>     Create a page
+  create-label <sectionNum> <file>           Create a label (no name field)
   create-resource <sectionNum> <name> <file> Create a file resource (upload)
-  create-assign <sectionNum> <name> <html>   Create an assignment
+  create-assign <sectionNum> <name> <file>   Create an assignment
     --open <timestamp>                         Open date (Unix timestamp)
     --due <timestamp>                          Due date (Unix timestamp)
-  create-forum <sectionNum> <name> <htmlFile> Create a forum
+  create-forum <sectionNum> <name> <file>    Create a forum
   create-quiz <sectionNum> <configJson>      Create a quiz from JSON config
 
 Section Operations:
@@ -1587,27 +1632,31 @@ try {
       await createUrl(parseInt(cleanArgs[1]), cleanArgs[2], cleanArgs[3], live);
       break;
     case 'create-page':
-      if (!cleanArgs[3]) throw new Error('Usage: create-page <sectionNum> <name> <htmlFile>');
-      await createPage(parseInt(cleanArgs[1]), cleanArgs[2], readFileSync(resolve(cleanArgs[3]), 'utf-8').trim(), live);
+      if (!cleanArgs[3]) throw new Error('Usage: create-page <sectionNum> <name> <htmlOrMdFile>');
+      await createPage(parseInt(cleanArgs[1]), cleanArgs[2], loadHtmlOrMd(cleanArgs[3]), live);
+      break;
+    case 'create-label':
+      if (!cleanArgs[2]) throw new Error('Usage: create-label <sectionNum> <htmlOrMdFile>');
+      await createLabel(parseInt(cleanArgs[1]), loadHtmlOrMd(cleanArgs[2]), live);
       break;
     case 'create-resource':
       if (!cleanArgs[3]) throw new Error('Usage: create-resource <sectionNum> <name> <filePath>');
       await createResource(parseInt(cleanArgs[1]), cleanArgs[2], resolve(cleanArgs[3]), live);
       break;
     case 'create-assign': {
-      if (!cleanArgs[3]) throw new Error('Usage: create-assign <sectionNum> <name> <htmlFile> [--open <timestamp>] [--due <timestamp>]');
+      if (!cleanArgs[3]) throw new Error('Usage: create-assign <sectionNum> <name> <htmlOrMdFile> [--open <timestamp>] [--due <timestamp>]');
       const openIdx = args.indexOf('--open');
       const dueIdx = args.indexOf('--due');
       const dates = {};
       if (openIdx >= 0) dates.open = parseInt(args[openIdx + 1]);
       if (dueIdx >= 0) dates.due = parseInt(args[dueIdx + 1]);
-      const introHtml = readFileSync(resolve(cleanArgs[3]), 'utf-8').trim();
+      const introHtml = loadHtmlOrMd(cleanArgs[3]);
       await createAssign(parseInt(cleanArgs[1]), cleanArgs[2], introHtml, live, null, Object.keys(dates).length ? dates : undefined);
       break;
     }
     case 'create-forum': {
-      if (!cleanArgs[3]) throw new Error('Usage: create-forum <sectionNum> <name> <htmlFile>');
-      const introHtml = readFileSync(resolve(cleanArgs[3]), 'utf-8').trim();
+      if (!cleanArgs[3]) throw new Error('Usage: create-forum <sectionNum> <name> <htmlOrMdFile>');
+      const introHtml = loadHtmlOrMd(cleanArgs[3]);
       await createForum(parseInt(cleanArgs[1]), cleanArgs[2], introHtml, live);
       break;
     }
@@ -1619,6 +1668,9 @@ try {
     }
 
     // --- Section Operations ---
+    case 'add-section':
+      await addSection(live);
+      break;
     case 'duplicate-section':
       await duplicateSection(live);
       break;

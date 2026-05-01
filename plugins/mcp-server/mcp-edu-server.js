@@ -22,6 +22,9 @@ import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const MOODLE_SCRIPT = resolve(__dirname, "../moodle-skill/scripts/moodle-updater.js");
+const MOODLE_DOWNLOAD_SCRIPT = resolve(__dirname, "../moodle-skill/scripts/download-course.js");
+const MOODLE_UPLOAD_PLAN_SCRIPT = resolve(__dirname, "../moodle-skill/scripts/upload-course.js");
+const MOODLE_EXECUTE_UPLOAD_SCRIPT = resolve(__dirname, "../moodle-skill/scripts/execute-upload.js");
 const KAHOOT_SCRIPT = resolve(__dirname, "../kahoot-skill/scripts/kahoot-creator.js");
 
 // ---------------------------------------------------------------------------
@@ -225,6 +228,13 @@ server.tool(
 // --- Section operations ---
 
 server.tool(
+  "moodle_add_section",
+  "Append a new empty section at the end of the Moodle course (dry-run unless live=true)",
+  { live: z.boolean().default(false).describe("Set true to apply changes (default: dry-run)") },
+  ({ live }) => text(run(MOODLE_SCRIPT, ["add-section", ...(live ? ["--live"] : [])]))
+);
+
+server.tool(
   "moodle_duplicate_section",
   "Duplicate the last Moodle section (dry-run unless live=true)",
   { live: z.boolean().default(false).describe("Set true to apply changes (default: dry-run)") },
@@ -371,6 +381,42 @@ server.tool(
       ...(regrade ? ["--regrade"] : []),
       ...(live ? ["--live"] : []),
     ], 300_000))
+);
+
+// --- Course round-trip (download / template / upload) ---
+
+server.tool(
+  "moodle_download_course",
+  "Mirror the source Moodle course (from .env MOODLE_URL/COURSE_ID) into a round-trip-friendly folder tree (sections, activities, summaries, files).",
+  {
+    outDir: z.string().default("./kurs").describe("Output directory (default: ./kurs)"),
+  },
+  ({ outDir }) => text(run(MOODLE_DOWNLOAD_SCRIPT, [outDir], 600_000))
+);
+
+server.tool(
+  "moodle_upload_course_plan",
+  "Print the moodle-updater.js commands that would re-create a downloaded course in the target course (.env MOODLE_URL/COURSE_ID). No HTTP calls — pure plan output.",
+  {
+    kursDir: z.string().default("./kurs").describe("Path to downloaded course tree (default: ./kurs)"),
+  },
+  ({ kursDir }) => text(run(MOODLE_UPLOAD_PLAN_SCRIPT, [kursDir]))
+);
+
+server.tool(
+  "moodle_execute_upload",
+  "Append-only uploader: walks a downloaded course tree and appends each source section as a NEW section at the end of the target course. Existing sections are never touched. Without live=true runs as dry-run.",
+  {
+    kursDir: z.string().default("./kurs").describe("Path to downloaded course tree (default: ./kurs)"),
+    section: z.string().optional().describe("Only upload this single source section by folder prefix (e.g. \"01\")"),
+    live: z.boolean().default(false).describe("Set true to actually execute (default: dry-run)"),
+  },
+  ({ kursDir, section, live }) =>
+    text(run(MOODLE_EXECUTE_UPLOAD_SCRIPT, [
+      kursDir,
+      ...(section ? ["--section", section] : []),
+      ...(live ? ["--live"] : []),
+    ], 1_800_000))
 );
 
 // ===========================================================================

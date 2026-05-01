@@ -422,6 +422,56 @@ section {
   margin: 0 auto;
 }
 
+/* ─── WHAT'S NEW ─── */
+.news-section { padding: 4rem 2rem; }
+.news-card {
+  max-width: 820px;
+  margin: 2rem auto 0;
+  border-radius: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  padding: 2rem 2.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.news-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+.news-tag {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(56, 132, 255, 0.12);
+  color: var(--accent-primary);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.news-card h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+.news-card p { color: var(--text-secondary); line-height: 1.65; margin-bottom: 0.75rem; }
+.news-steps {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.news-steps code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--bg-elevated, rgba(0,0,0,0.04));
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+}
+
 /* ─── PLUGINS SECTION ─── */
 .plugins-grid {
   display: grid;
@@ -1418,6 +1468,7 @@ footer {
   </div>
   <ul class="nav-links">
     <li><a href="#demo">Demo</a></li>
+    <li><a href="#news">News</a></li>
     <li><a href="#plugins">Plugins</a></li>
     <li><a href="#install">Install</a></li>
     <li><a href="#compatibility">Compatibility</a></li>
@@ -1478,6 +1529,29 @@ footer {
   </div>
 </section>
 
+<!-- WHAT'S NEW -->
+<section class="news-section" id="news">
+  <div class="container">
+    <div class="section-label" data-reveal style="justify-content:center;">What's New</div>
+    <h2 class="section-title" data-reveal data-reveal-delay="1" style="text-align:center;">Latest update</h2>
+    <div class="news-card" data-reveal data-reveal-delay="2">
+      <div class="news-meta">
+        <span class="news-tag">New</span>
+        <time datetime="2026-05-01">May 1, 2026</time>
+        <span>&middot; Moodle Skill</span>
+      </div>
+      <h3>Course round-trip: download &rarr; edit &rarr; re-upload</h3>
+      <p>The Moodle skill can now mirror a whole course to a local, round-trip-friendly folder tree, edit it locally, and append everything as new sections to a target course &mdash; all from the CLI, with dry-run by default.</p>
+      <ol class="news-steps">
+        <li><code>download-course.js</code> &mdash; mirrors the source course (sections, activities, summaries, files) into <code>./kurs/</code>.</li>
+        <li><code>upload-course.js</code> &mdash; prints the exact <code>moodle-updater.js</code> commands that would re-create the course.</li>
+        <li><code>execute-upload.js --live</code> &mdash; append-only uploader; existing sections in the target course are never touched.</li>
+      </ol>
+      <p style="margin-top:1rem;margin-bottom:0;">Also new: the <code>add-section</code> command in <code>moodle-updater.js</code> for appending a single empty section.</p>
+    </div>
+  </div>
+</section>
+
 <!-- PLUGINS -->
 <section id="plugins">
   <div class="container">
@@ -1499,6 +1573,7 @@ footer {
           <li>Section management (move, rename, duplicate)</li>
           <li>AI-powered essay grading pipeline</li>
           <li>Label and page content editing</li>
+          <li>Course round-trip: download &rarr; edit &rarr; re-upload</li>
           <li>Dry-run safety for all destructive ops</li>
         </ul>
       </div>
